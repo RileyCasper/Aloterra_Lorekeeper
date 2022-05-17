@@ -74,7 +74,7 @@ function calculateGroupCurrency($data)
 function getAssetKeys($isCharacter = false)
 {
     if (!$isCharacter) {
-        return ['items', 'currencies', 'raffle_tickets', 'loot_tables', 'user_items', 'characters'];
+        return ['items', 'currencies', 'pets', 'weapons', 'gears', 'raffle_tickets', 'loot_tables', 'user_items', 'characters'];
     } else {
         return ['currencies', 'items', 'character_items', 'loot_tables'];
     }
@@ -106,6 +106,21 @@ function getAssetModelString($type, $namespaced = true)
             } else {
                 return 'Currency';
             }
+            break;
+
+        case 'pets':
+            if($namespaced) return '\App\Models\Pet\Pet';
+            else return 'Pet';
+            break;
+
+        case 'weapons':
+            if($namespaced) return '\App\Models\Claymore\Weapon';
+            else return 'Weapon';
+            break;
+
+        case 'gears':
+            if($namespaced) return '\App\Models\Claymore\Gear';
+            else return 'Gear';
             break;
 
         case 'raffle_tickets':
@@ -299,7 +314,26 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data)
                     return false;
                 }
             }
-        } elseif ($key == 'raffle_tickets' && count($contents)) {
+        }
+        elseif($key == 'pets' && count($contents))
+        {
+            $service = new \App\Services\PetManager;
+            foreach($contents as $asset)
+                if(!$service->creditPet($sender, $recipient, $logType, $data, $asset['asset'], $asset['quantity'])) return false;
+        }
+        elseif($key == 'gears' && count($contents))
+        {
+            $service = new \App\Services\Claymore\GearManager;
+            foreach($contents as $asset)
+                if(!$service->creditGear($sender, $recipient, $logType, $data, $asset['asset'], $asset['quantity'])) return false;
+        }
+        elseif($key == 'weapons' && count($contents))
+        {
+            $service = new \App\Services\Claymore\WeaponManager;
+            foreach($contents as $asset)
+                if(!$service->creditWeapon($sender, $recipient, $logType, $data, $asset['asset'], $asset['quantity'])) return false;
+        }
+        elseif ($key == 'raffle_tickets' && count($contents)) {
             $service = new \App\Services\RaffleManager;
             foreach ($contents as $asset) {
                 if (!$service->addTicket($recipient, $asset['asset'], $asset['quantity'])) {
@@ -309,7 +343,7 @@ function fillUserAssets($assets, $sender, $recipient, $logType, $data)
         } elseif ($key == 'user_items' && count($contents)) {
             $service = new \App\Services\InventoryManager;
             foreach ($contents as $asset) {
-                if (!$service->moveStack($sender, $recipient, $logType, $data, $asset['asset'])) {
+                if (!$service->moveStack($sender, $recipient, $logType, $data, $asset['asset'], $asset['quantity'])) {
                     return false;
                 }
             }

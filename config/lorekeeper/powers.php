@@ -55,5 +55,17 @@ return [
         'name'        => 'Has Maintenance Access',
         'description' => 'Allow rank to browse the site normally during maintenance mode.',
     ],
+    'edit_stats' => [
+        'name' => 'Edit Stats',
+        'description' => 'Allow rank to edit stats.'
+    ],
+    'edit_levels' => [
+        'name' => 'Edit Levels',
+        'description' => 'Allow rank to edit levels.'
+    ],
+    'edit_claymores' => [
+        'name' => 'Edit Claymores & Companions',
+        'description' => 'Allow rank to edit claymore & companions data.'
+    ],
 
 ];

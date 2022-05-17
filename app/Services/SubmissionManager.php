@@ -17,6 +17,14 @@ use Illuminate\Support\Arr;
 use Notifications;
 use Settings;
 
+use App\Models\Pet\Pet;
+use App\Models\Claymore\Gear;
+use App\Models\Claymore\Weapon;
+
+use App\Services\Stat\ExperienceManager;
+use App\Services\Stat\StatManager;
+use App\Services\SkillManager;
+
 class SubmissionManager extends Service
 {
     /**
@@ -33,7 +41,6 @@ class SubmissionManager extends Service
         DB::beginTransaction();
 
         try {
-
             // 1. check that the prompt can be submitted at this time
             // 2. check that the characters selected exist (are visible too)
             // 3. check that the currencies selected can be attached to characters
@@ -117,6 +124,14 @@ class SubmissionManager extends Service
                     }
                 }
             }
+            if(!$isClaim)
+            {
+                //level req
+                if($prompt->level_req)
+                {
+                    if(!$user->level || $user->level->current_level < $prompt->level_req) throw new \Exception('You are not high enough level to enter this prompt');
+                }
+            }
 
             // Get a list of rewards, then create the submission itself
             $promptRewards = createAssetsArray();
@@ -177,7 +192,21 @@ class SubmissionManager extends Service
                     'character_id'  => $c->id,
                     'submission_id' => $submission->id,
                     'data'          => json_encode(getDataReadyAssets($assets)),
+                    'is_focus'      => isset($data['character_is_focus']) && $data['character_is_focus'][$c->id] ? $data['character_is_focus'][$c->id] : 0,
                 ]);
+
+                if(isset($data['character_is_focus']) && $data['character_is_focus'][$c->id] && $submission->prompt_id) {
+                    foreach($submission->prompt->skills as $skill) {
+                        if($skill->skill->parent) {
+                            $charaSkill = $c->skills()->where('skill_id', $skill->skill->id)->first();
+                            if(!$charaSkill || $charaSkill->level < $skill->parent_level) throw new \Exception("Skill level too low on one or more characters.");
+                        }
+                        if($skill->skill->prerequisite) {
+                            $charaSkill = $c->skills()->where('skill_id', $skill->skill->id)->first();
+                            if(!$charaSkill) throw new \Exception("Skill not unlocked on one or more characters.");
+                        }
+                    }
+                }
             }
 
             return $this->commitReturn($submission);
@@ -411,6 +440,52 @@ class SubmissionManager extends Service
             // We're going to remove all characters from the submission and reattach them with the updated data
             $submission->characters()->delete();
 
+            // do the user stats stuff first so that we can use variables later
+            // stats & exp ---- currently prompt only
+            if($submission->prompt_id && $submission->prompt->expreward) {
+                // initialise
+                $levelLog = new ExperienceManager;
+                $statLog = new StatManager;
+                // data
+                $levelData = 'Received rewards for '.($submission->prompt_id ? 'submission' : 'claim').' (<a href="'.$submission->viewUrl.'">#'.$submission->id.'</a>)';
+                // to be encoded
+                $user_exp = null;
+                $user_points = null;
+                $character_exp = null;
+                $character_points = null;
+                // user
+                $level = $submission->user->level;
+                $levelUser = $submission->user;
+                if(!$level) throw new \Exception('This user does not have a level log.');
+
+                // exp
+                if($submission->prompt->expreward->user_exp || isset($data['bonus_user_exp']))
+                {
+                    // get predefined user exp amount
+                    $quantity = $submission->prompt->expreward->user_exp;
+                        if(isset($data['bonus_user_exp']))
+                        {
+                            // add bonus
+                            $quantity += $data['bonus_user_exp'];
+                        }
+                        else $data['bonus_user_exp'] = 0;
+                        $user_exp += $data['bonus_user_exp'];
+                    if(!$levelLog->creditExp(null, $levelUser, $promptLogType, $levelData, $quantity)) throw new \Exception('Could not grant user exp');
+                }
+                //points
+                if($submission->prompt->expreward->user_points || isset($data['bonus_user_points']))
+                {
+                    $quantity = $submission->prompt->expreward->user_points;
+                        if(isset($data['bonus_user_points']))
+                        {
+                            $quantity += $data['bonus_user_points'];
+                        }
+                        else $data['bonus_user_points'] = 0;
+                        $user_points +=  $data['bonus_user_points'];
+                    if(!$statLog->creditStat(null, $levelUser, $promptLogType, $levelData, $quantity)) throw new \Exception('Could not grant user points');
+                }
+            }
+
             // Distribute character rewards
             foreach ($characters as $c) {
                 // Users might not pass in clean arrays (may contain redundant data) so we need to clean that up
@@ -424,7 +499,61 @@ class SubmissionManager extends Service
                     'character_id'  => $c->id,
                     'submission_id' => $submission->id,
                     'data'          => json_encode(getDataReadyAssets($assets)),
+                    'is_focus'      => isset($data['character_is_focus']) && $data['character_is_focus'][$c->id] ? $data['character_is_focus'][$c->id] : 0,
                 ]);
+
+                // here we do da skills
+                $skillManager = new SkillManager;
+
+                if(isset($data['character_is_focus']) && $data['character_is_focus'][$c->id] && $submission->prompt_id) {
+                    foreach($submission->prompt->skills as $skill) {
+                        if(!$skillManager->creditSkill($user, $c, $skill->skill, $skill->quantity, 'Prompt Reward')) throw new \Exception("Failed to credit skill.");
+                    }
+                    // if there's exp rewards
+                    if($submission->prompt->expreward) {
+                        $level = $c->level;
+                        if(!$level) throw new \Exception('One or more characters do not have a level log.');
+                        // exp
+                        if($submission->prompt->expreward->chara_exp || isset($data['bonus_exp']))
+                        {
+                            $quantity = $submission->prompt->expreward->chara_exp;
+                            if(isset($data['bonus_exp']))
+                            {
+                                $quantity += $data['bonus_exp'];
+                            }
+                            else $data['bonus_exp'] = 0;
+                            $character_exp += $data['bonus_exp'];
+                            if(!$levelLog->creditExp(null, $c, $promptLogType, $levelData, $quantity)) throw new \Exception('Could not grant character exp');
+                        }
+                        // points
+                        if($submission->prompt->expreward->chara_points || isset($data['bonus_points']))
+                        {
+                            $quantity = $submission->prompt->expreward->chara_points;
+                            if(isset($data['bonus_points']))
+                            {
+                                $quantity += $data['bonus_points'];
+                            }
+                            else $data['bonus_points'] = 0;
+                            $character_points += $data['bonus_points'];
+                            if(!$statLog->creditStat(null, $c, $promptLogType, $levelData, $quantity)) throw new \Exception('Could not grant character points');
+                        }
+                    }
+                }
+            }
+
+            if($submission->prompt_id && $submission->prompt->expreward) {
+                $json[] = [
+                    'User_Bonus' => [
+                        'exp' => $user_exp,
+                        'points' => $user_points
+                    ],
+                    'Character_Bonus' => [
+                        'exp' => $character_exp,
+                        'points' => $character_points
+                    ],
+                ];
+
+                $bonus = json_encode($json);
             }
 
             // Increment user submission count if it's a prompt
@@ -453,6 +582,7 @@ class SubmissionManager extends Service
                     'user'    => $addonData,
                     'rewards' => getDataReadyAssets($rewards),
                     ]), // list of rewards
+                'bonus'                 => isset($bonus) ? $bonus : null,
             ]);
 
             Notifications::create($submission->prompt_id ? 'SUBMISSION_APPROVED' : 'CLAIM_APPROVED', $submission->user, [
