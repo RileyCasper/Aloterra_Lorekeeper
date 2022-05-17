@@ -13,6 +13,8 @@ use App\Models\Claymore\Gear;
 use App\Models\Claymore\Weapon;
 use App\Models\Prompt\Prompt;
 use App\Models\Prompt\PromptCategory;
+use App\Models\Recipe\Recipe;
+
 use App\Services\PromptService;
 use Auth;
 use Illuminate\Http\Request;
@@ -202,7 +204,8 @@ class PromptController extends Controller
             'weapons' => Weapon::orderBy('name')->pluck('name', 'id'),
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
-            'skills' => Skill::pluck('name', 'id')->toArray()
+            'skills' => Skill::pluck('name', 'id')->toArray(),
+            'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),
         ]);
     }
 
@@ -230,7 +233,8 @@ class PromptController extends Controller
             'weapons' => Weapon::orderBy('name')->pluck('name', 'id'),
             'tables' => LootTable::orderBy('name')->pluck('name', 'id'),
             'raffles' => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
-            'skills' => Skill::pluck('name', 'id')->toArray()
+            'skills' => Skill::pluck('name', 'id')->toArray(),
+            'recipes'=> Recipe::orderBy('name')->pluck('name', 'id'),
         ]);
     }
 

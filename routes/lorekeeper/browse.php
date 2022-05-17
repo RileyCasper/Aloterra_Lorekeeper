@@ -74,6 +74,7 @@ Route::group(['prefix' => 'user', 'namespace' => 'Users'], function () {
     Route::get('{name}/stat-logs', 'UserController@getUserStatLogs');
     Route::get('{name}/gear-logs', 'UserController@getUserGearLogs');
     Route::get('{name}/weapon-logs', 'UserController@getUserWeaponLogs');
+    Route::get('{name}/recipe-logs', 'UserController@getUserRecipeLogs');
 });
 
 /**************************************************************************************************
@@ -154,6 +155,8 @@ Route::group(['prefix' => 'world'], function () {
     Route::get('skill-categories', 'WorldController@getSkillCategories');
     Route::get('skills', 'WorldController@getSkills');
     Route::get('skills/{id}', 'WorldController@getSkill');
+    Route::get('recipes', 'WorldController@getRecipes');
+    Route::get('recipes/{id}', 'WorldController@getRecipe');
 });
 
 Route::group(['prefix' => 'prompts'], function () {

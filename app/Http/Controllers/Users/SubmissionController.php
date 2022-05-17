@@ -13,6 +13,7 @@ use App\Models\Submission\Submission;
 use App\Models\Submission\SubmissionCharacter;
 use App\Models\User\User;
 use App\Models\User\UserItem;
+use App\Models\Recipe\Recipe;
 use App\Models\Prompt\Prompt;
 use App\Models\Pet\Pet;
 use App\Models\Claymore\Gear;
@@ -251,6 +252,7 @@ class SubmissionController extends Controller
             'gears'                 => Gear::orderBy('name')->pluck('name', 'id'),
             'weapons'               => Weapon::orderBy('name')->pluck('name', 'id'),
             'raffles'               => Raffle::where('rolled_at', null)->where('is_active', 1)->orderBy('name')->pluck('name', 'id'),
+            'recipes'               => Recipe::orderBy('name')->pluck('name', 'id'),
             'page'                  => 'submission',
             'expanded_rewards'      => Config::get('lorekeeper.extensions.character_reward_expansion.expanded')
         ]));

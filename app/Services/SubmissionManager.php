@@ -25,6 +25,8 @@ use App\Services\Stat\ExperienceManager;
 use App\Services\Stat\StatManager;
 use App\Services\SkillManager;
 
+use App\Models\Recipe\Recipe;
+
 class SubmissionManager extends Service
 {
     /**
@@ -215,6 +217,88 @@ class SubmissionManager extends Service
         }
 
         return $this->rollbackReturn(false);
+    }
+
+    private function innerNull($value){
+        return array_values(array_filter($value));
+    }
+
+    /**
+     * Processes reward data into a format that can be used for distribution.
+     *
+     * @param  array $data
+     * @param  bool  $isCharacter
+     * @param  bool  $isStaff
+     * @return array
+     */
+    private function processRewards($data, $isCharacter, $isStaff = false)
+    {
+        if($isCharacter)
+        {
+            $assets = createAssetsArray(true);
+
+            if(isset($data['character_currency_id'][$data['character_id']]) && isset($data['character_quantity'][$data['character_id']]))
+            {
+                foreach($data['character_currency_id'][$data['character_id']] as $key => $currency)
+                {
+                    if($data['character_quantity'][$data['character_id']][$key]) addAsset($assets, $data['currencies'][$currency], $data['character_quantity'][$data['character_id']][$key]);
+                }
+            }
+            elseif(isset($data['character_rewardable_type'][$data['character_id']]) && isset($data['character_rewardable_id'][$data['character_id']]) && isset($data['character_rewardable_quantity'][$data['character_id']]))
+            {
+
+                $data['character_rewardable_id'] = array_map(array($this, 'innerNull'),$data['character_rewardable_id']);
+
+                foreach($data['character_rewardable_id'][$data['character_id']] as $key => $reward)
+                {
+                    switch($data['character_rewardable_type'][$data['character_id']][$key])
+                    {
+                        case 'Currency': if($data['character_rewardable_quantity'][$data['character_id']][$key]) addAsset($assets, $data['currencies'][$reward], $data['character_rewardable_quantity'][$data['character_id']][$key]); break;
+                        case 'Item': if($data['character_rewardable_quantity'][$data['character_id']][$key]) addAsset($assets, $data['items'][$reward], $data['character_rewardable_quantity'][$data['character_id']][$key]); break;
+                        case 'LootTable': if($data['character_rewardable_quantity'][$data['character_id']][$key]) addAsset($assets, $data['tables'][$reward], $data['character_rewardable_quantity'][$data['character_id']][$key]); break;
+                    }
+                }
+            }
+            return $assets;
+        }
+        else
+        {
+            $assets = createAssetsArray(false);
+            // Process the additional rewards
+            if(isset($data['rewardable_type']) && $data['rewardable_type'])
+            {
+                foreach($data['rewardable_type'] as $key => $type)
+                {
+                    $reward = null;
+                    switch($type)
+                    {
+                        case 'Item':
+                            $reward = Item::find($data['rewardable_id'][$key]);
+                            break;
+                        case 'Currency':
+                            $reward = Currency::find($data['rewardable_id'][$key]);
+                            if(!$reward->is_user_owned) throw new \Exception("Invalid currency selected.");
+                            break;
+                        case 'LootTable':
+                            if (!$isStaff) break;
+                            $reward = LootTable::find($data['rewardable_id'][$key]);
+                            break;
+                        case 'Raffle':
+                            if (!$isStaff) break;
+                            $reward = Raffle::find($data['rewardable_id'][$key]);
+                            break;
+                        case 'Recipe':
+                            if (!$isStaff) break;
+                            $reward = Recipe::find($data['rewardable_id'][$key]);
+                            if(!$reward->needs_unlocking) throw new \Exception("Invalid recipe selected.");
+                            break;
+                    }
+                    if(!$reward) continue;
+                    addAsset($assets, $reward, $data['quantity'][$key]);
+                }
+            }
+            return $assets;
+        }
     }
 
     /**
