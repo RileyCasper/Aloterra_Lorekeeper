@@ -93,7 +93,7 @@ return [
         'regex'         => '/twitch\.tv\/([A-Za-z0-9_-]+)/',
         'link'          => 'twitch.tv',
         'icon'          => 'fab fa-twitch',
-        'auth'          => 0,
+        'auth'          => 1,
         'primary_alias' => 0,
     ],
 
@@ -102,8 +102,8 @@ return [
         'display_name'  => 'discord',
         'regex'         => '/([A-Za-z0-9_-]+)#([0-9]+)/m',
         'icon'          => 'fab fa-discord',
-        'auth'          => 0,
-        'primary_alias' => 0,
+        'auth'          => 1,
+        'primary_alias' => 1,
     ],
 
     /**********************************************************************************************
@@ -124,5 +124,12 @@ return [
         'display_name' => 'picarto',
         'regex'        => '/picarto\.tv\/([A-Za-z0-9_-]+)/',
         'link'         => 'picarto.tv',
+    ],
+
+    'furaffinity' => [
+        'full_name'    => 'Furaffinity',
+        'display_name' => 'furaffinity',
+        'regex'        => '/furaffinity\.net\/([A-Za-z0-9_-]+)/',
+        'link'         => 'furaffinity.net',
     ],
 ];

@@ -103,7 +103,6 @@ return [
                 'url'  => 'admin/grants/items',
             ],
             [
-<<<<<<< HEAD
                 'name' => 'EXP Grants',
                 'url' => 'admin/grants/exp'
             ],
@@ -119,13 +118,11 @@ return [
                 'name' => 'Weapon Grants',
                 'url' => 'admin/grants/weapons'
             ],
-        ],
-=======
+            [
                 'name' => 'Recipe Grants',
                 'url' => 'admin/grants/recipes'
             ],
-        ]
->>>>>>> 7ef0609dde9bed50008e92f27d88853636f2e32d
+        ],
     ],
     'Masterlist' => [
         'power' => 'manage_characters',
@@ -257,16 +254,12 @@ return [
             [
                 'name' => 'Character Skills',
                 'url' => 'admin/data/skills'
-            ]
             ],
-<<<<<<< HEAD
-=======
             [
                 'name' => 'Recipes',
                 'url' => 'admin/data/recipes'
             ],
-        ]
->>>>>>> 7ef0609dde9bed50008e92f27d88853636f2e32d
+        ],
     ],
     'Raffles' => [
         'power' => 'manage_raffles',
