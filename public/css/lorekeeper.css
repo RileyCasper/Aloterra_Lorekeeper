@@ -932,3 +932,11 @@ tr.accountbound {
 .recipe-image {
     width: 150px;
 }
+
+.clock-styling {
+    padding: 5px 15px;
+    border-radius: 15px 15px;
+    margin-bottom: .5em;
+    color: #fff;
+    letter-spacing: .05em;
+}
