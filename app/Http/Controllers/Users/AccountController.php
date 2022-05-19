@@ -14,6 +14,9 @@ use App\Services\UserService;
 use Auth;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Notification;
+use App\Models\WorldExpansion\Location;
+use App\Models\WorldExpansion\Faction;
 
 class AccountController extends Controller
 {
@@ -51,6 +54,27 @@ class AccountController extends Controller
             'themeOptions' => Theme::where('is_active',1)->get()->pluck('displayName','id')->toArray()
         ]);
     }
+    public function getSettings()
+    {
+        $interval = array(
+            0 => 'whenever',
+            1 => 'yearly',
+            2 => 'quarterly',
+            3 => 'monthly',
+            4 => 'weekly',
+            5 => 'daily'
+        );
+
+        return view('account.settings',[
+            'locations' => Location::all()->where('is_user_home')->pluck('style','id')->toArray(),
+            'factions' => Faction::all()->where('is_user_faction')->pluck('style','id')->toArray(),
+            'user_enabled' => Settings::get('WE_user_locations'),
+            'user_faction_enabled' => Settings::get('WE_user_factions'),
+            'char_enabled' => Settings::get('WE_character_locations'),
+            'char_faction_enabled' => Settings::get('WE_character_factions'),
+            'location_interval' => $interval[Settings::get('WE_change_timelimit')]
+        ]);
+    }
 
     /**
      * Edits the user's profile.
@@ -84,6 +108,41 @@ class AccountController extends Controller
         }
         return redirect()->back();
     }
+
+    /**
+     * Edits the user's location from a list of locations that users can make their home.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postLocation(Request $request, UserService $service)
+    {
+        if($service->updateLocation($request->input('location'), Auth::user())) {
+            flash('Location updated successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
+
+    /**
+     * Edits the user's faction from a list of factions that users can make their home.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postFaction(Request $request, UserService $service)
+    {
+        if($service->updateFaction($request->input('faction'), Auth::user())) {
+            flash('Faction updated successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
+        }
+        return redirect()->back();
+    }
+
 
     /**
      * Edits the user's theme.

@@ -94,6 +94,8 @@ class UserController extends Controller
             'sublists'   => Sublist::orderBy('sort', 'DESC')->get(),
             'characters' => $characters,
             'armours'    => $armours,
+            'user_enabled' => Settings::get('WE_user_locations'),
+            'user_factions_enabled' => Settings::get('WE_user_factions')
         ]);
     }
 
