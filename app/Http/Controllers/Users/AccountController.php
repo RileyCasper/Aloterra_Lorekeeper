@@ -7,6 +7,7 @@ use App\Models\Notification;
 use App\Models\User\User;
 use App\Models\User\UserAlias;
 use App\Models\Character\BreedingPermission;
+use App\Models\Theme;
 
 use App\Services\LinkService;
 use App\Services\UserService;
@@ -46,7 +47,9 @@ class AccountController extends Controller
      */
     public function getSettings()
     {
-        return view('account.settings');
+        return view('account.settings',[
+            'themeOptions' => Theme::where('is_active',1)->get()->pluck('displayName','id')->toArray()
+        ]);
     }
 
     /**
@@ -78,6 +81,23 @@ class AccountController extends Controller
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
             }
+        }
+        return redirect()->back();
+    }
+
+    /**
+     * Edits the user's theme.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function postTheme(Request $request, UserService $service)
+    {
+        if($service->updateTheme($request->only('theme'), Auth::user())) {
+            flash('Theme updated successfully.')->success();
+        }
+        else {
+            foreach($service->errors()->getMessages()['error'] as $error) flash($error)->error();
         }
         return redirect()->back();
     }
