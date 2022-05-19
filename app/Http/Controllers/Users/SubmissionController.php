@@ -23,6 +23,7 @@ use Auth;
 use Config;
 use Illuminate\Http\Request;
 use Settings;
+use App\Models\Status\StatusEffect;
 
 class SubmissionController extends Controller
 {
@@ -111,6 +112,7 @@ class SubmissionController extends Controller
             'pets'                => Pet::orderBy('name')->pluck('name', 'id'),
             'gears'               => Gear::orderBy('name')->pluck('name', 'id'),
             'weapons'             => Weapon::orderBy('name')->pluck('name', 'id'),
+            'statuses'            => StatusEffect::orderBy('name')->pluck('name', 'id'),
             'inventory'           => $inventory,
             'page'                => 'submission',
             'expanded_rewards'    => Config::get('lorekeeper.extensions.character_reward_expansion.expanded')
@@ -248,6 +250,7 @@ class SubmissionController extends Controller
             'item_filter'           => Item::orderBy('name')->released()->get()->keyBy('id'),
             'items'                 => Item::orderBy('name')->released()->pluck('name', 'id'),
             'currencies'            => Currency::where('is_user_owned', 1)->orderBy('name')->pluck('name', 'id'),
+            'statuses'              => StatusEffect::orderBy('name')->pluck('name', 'id'),
             'pets'                  => Pet::orderBy('name')->pluck('name', 'id'),
             'gears'                 => Gear::orderBy('name')->pluck('name', 'id'),
             'weapons'               => Weapon::orderBy('name')->pluck('name', 'id'),

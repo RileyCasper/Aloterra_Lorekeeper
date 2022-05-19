@@ -76,7 +76,7 @@ function getAssetKeys($isCharacter = false)
     if (!$isCharacter) {
         return ['items', 'currencies', 'pets', 'weapons', 'gears', 'raffle_tickets', 'loot_tables', 'user_items', 'characters', 'recipes'];
     } else {
-        return ['currencies', 'items', 'character_items', 'loot_tables'];
+        return ['currencies', 'items', 'character_items', 'loot_tables', 'statuses'];
     }
 }
 
@@ -167,6 +167,11 @@ function getAssetModelString($type, $namespaced = true)
                 return 'CharacterItem';
             }
             break;
+
+        case 'statuses':
+            if($namespaced) return '\App\Models\Status\StatusEffect';
+            else return 'StatusEffect';
+            break;
     }
 
     return null;
@@ -198,7 +203,7 @@ function createAssetsArray($isCharacter = false)
  *
  * @return array
  */
-function mergeAssetsArrays($first, $second)
+function mergeAssetsArrays($first, $second, $isCharacter = false)
 {
     $keys = getAssetKeys();
     foreach ($keys as $key) {
@@ -415,6 +420,12 @@ function fillCharacterAssets($assets, $sender, $recipient, $logType, $data, $sub
                     return false;
                 }
             }
+        }
+        elseif($key == 'statuses' && count($contents))
+        {
+            $service = new \App\Services\StatusEffectManager;
+            foreach($contents as $asset)
+                if(!$service->creditStatusEffect($sender, $recipient, $logType, $data['data'], $asset['asset'], $asset['quantity'])) return false;
         }
     }
 

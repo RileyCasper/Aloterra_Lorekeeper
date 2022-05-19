@@ -26,6 +26,7 @@ use App\Services\Stat\StatManager;
 use App\Services\SkillManager;
 
 use App\Models\Recipe\Recipe;
+use App\Models\Status\StatusEffect;
 
 class SubmissionManager extends Service
 {
@@ -158,6 +159,7 @@ class SubmissionManager extends Service
             $currencyIds = [];
             $itemIds = [];
             $tableIds = [];
+            $statusIds = [];
             if (isset($data['character_currency_id'])) {
                 foreach ($data['character_currency_id'] as $c) {
                     foreach ($c as $currencyId) {
@@ -171,6 +173,7 @@ class SubmissionManager extends Service
                         switch ($data['character_rewardable_type'][$ckey][$key]) {
                             case 'Currency': $currencyIds[] = $id; break;
                             case 'Item': $itemIds[] = $id; break;
+                            case 'StatusEffect': $statusIds[] = $id; break;
                             case 'LootTable': $tableIds[] = $id; break;
                         }
                     }
@@ -179,14 +182,16 @@ class SubmissionManager extends Service
             array_unique($currencyIds);
             array_unique($itemIds);
             array_unique($tableIds);
+            array_unique($statusIds);
             $currencies = Currency::whereIn('id', $currencyIds)->where('is_character_owned', 1)->get()->keyBy('id');
             $items = Item::whereIn('id', $itemIds)->get()->keyBy('id');
             $tables = LootTable::whereIn('id', $tableIds)->get()->keyBy('id');
+            $statuses = StatusEffect::whereIn('id', $statusIds)->get()->keyBy('id');
 
             // Attach characters
             foreach ($characters as $c) {
                 // Users might not pass in clean arrays (may contain redundant data) so we need to clean that up
-                $assets = $this->processRewards($data + ['character_id' => $c->id, 'currencies' => $currencies, 'items' => $items, 'tables' => $tables], true);
+                $assets = $this->processRewards($data + ['character_id' => $c->id, 'currencies' => $currencies, 'items' => $items, 'tables' => $tables, 'statuses' => $statuses], true);
 
                 // Now we have a clean set of assets (redundant data is gone, duplicate entries are merged)
                 // so we can attach the character to the submission
@@ -256,6 +261,7 @@ class SubmissionManager extends Service
                         case 'Currency': if($data['character_rewardable_quantity'][$data['character_id']][$key]) addAsset($assets, $data['currencies'][$reward], $data['character_rewardable_quantity'][$data['character_id']][$key]); break;
                         case 'Item': if($data['character_rewardable_quantity'][$data['character_id']][$key]) addAsset($assets, $data['items'][$reward], $data['character_rewardable_quantity'][$data['character_id']][$key]); break;
                         case 'LootTable': if($data['character_rewardable_quantity'][$data['character_id']][$key]) addAsset($assets, $data['tables'][$reward], $data['character_rewardable_quantity'][$data['character_id']][$key]); break;
+                        case 'StatusEffect': if($data['character_rewardable_quantity'][$data['character_id']][$key]) addAsset($assets, $data['statuses'][$reward], $data['character_rewardable_quantity'][$data['character_id']][$key]); break;
                     }
                 }
             }
@@ -496,6 +502,7 @@ class SubmissionManager extends Service
             $currencyIds = [];
             $itemIds = [];
             $tableIds = [];
+            $statusIds = [];
             if (isset($data['character_currency_id'])) {
                 foreach ($data['character_currency_id'] as $c) {
                     foreach ($c as $currencyId) {
@@ -510,6 +517,7 @@ class SubmissionManager extends Service
                             case 'Currency': $currencyIds[] = $id; break;
                             case 'Item': $itemIds[] = $id; break;
                             case 'LootTable': $tableIds[] = $id; break;
+                            case 'StatusEffect': $statusIds[] = $id; break;
                         }
                     }
                 } // Expanded character rewards
@@ -517,9 +525,11 @@ class SubmissionManager extends Service
             array_unique($currencyIds);
             array_unique($itemIds);
             array_unique($tableIds);
+            array_unique($statusIds);
             $currencies = Currency::whereIn('id', $currencyIds)->where('is_character_owned', 1)->get()->keyBy('id');
             $items = Item::whereIn('id', $itemIds)->get()->keyBy('id');
             $tables = LootTable::whereIn('id', $tableIds)->get()->keyBy('id');
+            $statuses = StatusEffect::whereIn('id', $statusIds)->get()->keyBy('id');
 
             // We're going to remove all characters from the submission and reattach them with the updated data
             $submission->characters()->delete();
@@ -573,7 +583,7 @@ class SubmissionManager extends Service
             // Distribute character rewards
             foreach ($characters as $c) {
                 // Users might not pass in clean arrays (may contain redundant data) so we need to clean that up
-                $assets = $this->processRewards($data + ['character_id' => $c->id, 'currencies' => $currencies, 'items' => $items, 'tables' => $tables], true);
+                $assets = $this->processRewards($data + ['character_id' => $c->id, 'currencies' => $currencies, 'items' => $items, 'tables' => $tables, 'statuses' => $statuses], true);
 
                 if (!$assets = fillCharacterAssets($assets, $user, $c, $promptLogType, $promptData, $submission->user)) {
                     throw new \Exception('Failed to distribute rewards to character.');

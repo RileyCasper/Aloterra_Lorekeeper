@@ -64,6 +64,10 @@
                     $cell.children('.character-currencies').addClass('show');
                     $cell.children('.character-currencies').removeClass('hide');
                 }
+                else if (val == 'StatusEffect'){
+                    $cell.children('.character-statuses').addClass('show');
+                    $cell.children('.character-statuses').removeClass('hide');
+                }
                 else if (val == 'LootTable'){
                     $cell.children('.character-tables').addClass('show');
                     $cell.children('.character-tables').addClass('show');
@@ -79,6 +83,7 @@
             node.find('.character-currency-id').attr('name', 'character_rewardable_id[' + id + '][]');
             node.find('.character-item-id').attr('name', 'character_rewardable_id[' + id + '][]');
             node.find('.character-table-id').attr('name', 'character_rewardable_id[' + id + '][]');
+            node.find('.character-status-id').attr('name', 'character_rewardable_id[' + id + '][]');
         }
 
     });

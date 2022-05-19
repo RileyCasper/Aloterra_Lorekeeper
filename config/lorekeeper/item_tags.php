@@ -36,10 +36,22 @@ return [
         'text_color' => '#ffffff',
         'background_color' => '#a69bc6'
     ],
-    
+
     'recipe' => [
         'name' => 'Recipe',
         'text_color' => '#ffffff',
         'background_color' => '#6D18A7'
+    ],
+
+    'buff' => [
+        'name' => 'Buff',
+        'text_color' => '#ffffff',
+        'background_color' => '#a4b88d'
+    ],
+
+    'cure' => [
+        'name' => 'Cure',
+        'text_color' => '#ffffff',
+        'background_color' => '#b4676b'
     ],
 ];
