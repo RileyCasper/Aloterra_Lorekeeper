@@ -33,7 +33,7 @@ class CharacterController extends Controller
     | Admin / Character Controller
     |--------------------------------------------------------------------------
     |
-    | Handles admin creation/editing of characters and MYO slots.
+    | Handles admin creation/editing of characters and geno slots.
     |
     */
 
@@ -64,17 +64,17 @@ class CharacterController extends Controller
             'specieses'             => ['0' => 'Select Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'subtypes'              => ['0' => 'Pick a Species First'],
             'features'              => Feature::orderBy('name')->pluck('name', 'id')->toArray(),
-            'isMyo'                 => false
+            'isGeno'                 => false
             'stats'                 => Stat::orderBy('name')->get(),
         ]);
     }
 
     /**
-     * Shows the create MYO slot page.
+     * Shows the create geno slot page.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCreateMyo()
+    public function getCreateGeno()
     {
         return view('admin.masterlist.create_character', [
             'userOptions'           => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
@@ -83,7 +83,7 @@ class CharacterController extends Controller
             'specieses'             => ['0' => 'Select Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'subtypes'              => ['0' => 'Pick a Species First'],
             'features'              => Feature::orderBy('name')->pluck('name', 'id')->toArray(),
-            'isMyo'                 => true
+            'isGeno'                 => true
             'stats'                 => Stat::orderBy('name')->get(),
         ]);
     }
@@ -93,13 +93,13 @@ class CharacterController extends Controller
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getCreateCharacterMyoSubtype(Request $request)
+    public function getCreateCharacterGenoSubtype(Request $request)
     {
         $species = $request->input('species');
 
         return view('admin.masterlist._create_character_subtype', [
           'subtypes' => ['0' => 'Select Subtype'] + Subtype::where('species_id', '=', $species)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-          'isMyo'    => $request->input('myo'),
+          'isGeno'    => $request->input('geno'),
       ]);
     }
 
@@ -155,15 +155,15 @@ class CharacterController extends Controller
     }
 
     /**
-     * Creates an MYO slot.
+     * Creates an geno slot.
      *
      * @param App\Services\CharacterManager $service
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postCreateMyo(Request $request, CharacterManager $service)
+    public function postCreateGeno(Request $request, CharacterManager $service)
     {
-        $request->validate(Character::$myoRules);
+        $request->validate(Character::$genoRules);
         $data = $request->only([
             'user_id', 'owner_url', 'name',
             'description', 'is_visible', 'is_giftable', 'is_tradeable', 'is_sellable',
@@ -193,7 +193,7 @@ class CharacterController extends Controller
             'image', 'thumbnail', 'stats'
         ]);
         if ($character = $service->createCharacter($data, Auth::user(), true)) {
-            flash('MYO slot created successfully.')->success();
+            flash('geno slot created successfully.')->success();
 
             return redirect()->to($character->url);
         } else {
@@ -224,20 +224,20 @@ class CharacterController extends Controller
             'categories'  => CharacterCategory::orderBy('sort')->pluck('name', 'id')->toArray(),
             'userOptions' => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
             'number'      => format_masterlist_number($this->character->number, Config::get('lorekeeper.settings.character_number_digits')),
-            'isMyo'       => false,
+            'isGeno'       => false,
         ]);
     }
 
     /**
-     * Shows the edit MYO stats modal.
+     * Shows the edit geno stats modal.
      *
      * @param int $id
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getEditMyoStats($id)
+    public function getEditGenoStats($id)
     {
-        $this->character = Character::where('is_myo_slot', 1)->where('id', $id)->first();
+        $this->character = Character::where('is_geno_slot', 1)->where('id', $id)->first();
         if (!$this->character) {
             abort(404);
         }
@@ -245,7 +245,7 @@ class CharacterController extends Controller
         return view('character.admin._edit_stats_modal', [
             'character'   => $this->character,
             'userOptions' => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
-            'isMyo'       => true,
+            'isGeno'       => true,
         ]);
     }
 
@@ -283,22 +283,22 @@ class CharacterController extends Controller
     }
 
     /**
-     * Edits an MYO slot's stats.
+     * Edits an geno slot's stats.
      *
      * @param App\Services\CharacterManager $service
      * @param int                           $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postEditMyoStats(Request $request, CharacterManager $service, $id)
+    public function postEditGenoStats(Request $request, CharacterManager $service, $id)
     {
-        $request->validate(Character::$myoRules);
+        $request->validate(Character::$genoRules);
         $data = $request->only([
             'name',
             'is_giftable', 'is_tradeable', 'is_sellable', 'sale_value',
             'transferrable_at',
         ]);
-        $this->character = Character::where('is_myo_slot', 1)->where('id', $id)->first();
+        $this->character = Character::where('is_geno_slot', 1)->where('id', $id)->first();
         if (!$this->character) {
             abort(404);
         }
@@ -331,27 +331,27 @@ class CharacterController extends Controller
 
         return view('character.admin._edit_description_modal', [
             'character' => $this->character,
-            'isMyo'     => false,
+            'isGeno'     => false,
         ]);
     }
 
     /**
-     * Shows the edit MYO slot description modal.
+     * Shows the edit geno slot description modal.
      *
      * @param int $id
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getEditMyoDescription($id)
+    public function getEditGenoDescription($id)
     {
-        $this->character = Character::where('is_myo_slot', 1)->where('id', $id)->first();
+        $this->character = Character::where('is_geno_slot', 1)->where('id', $id)->first();
         if (!$this->character) {
             abort(404);
         }
 
         return view('character.admin._edit_description_modal', [
             'character' => $this->character,
-            'isMyo'     => true,
+            'isGeno'     => true,
         ]);
     }
 
@@ -386,19 +386,19 @@ class CharacterController extends Controller
     }
 
     /**
-     * Edits an MYO slot's description.
+     * Edits an geno slot's description.
      *
      * @param App\Services\CharacterManager $service
      * @param int                           $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postEditMyoDescription(Request $request, CharacterManager $service, $id)
+    public function postEditGenoDescription(Request $request, CharacterManager $service, $id)
     {
         $data = $request->only([
             'description',
         ]);
-        $this->character = Character::where('is_myo_slot', 1)->where('id', $id)->first();
+        $this->character = Character::where('is_geno_slot', 1)->where('id', $id)->first();
         if (!$this->character) {
             abort(404);
         }
@@ -446,19 +446,19 @@ class CharacterController extends Controller
     }
 
     /**
-     * Edits an MYO slot's settings.
+     * Edits an geno slot's settings.
      *
      * @param App\Services\CharacterManager $service
      * @param int                           $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postMyoSettings(Request $request, CharacterManager $service, $id)
+    public function postGenoSettings(Request $request, CharacterManager $service, $id)
     {
         $data = $request->only([
             'is_visible',
         ]);
-        $this->character = Character::where('is_myo_slot', 1)->where('id', $id)->first();
+        $this->character = Character::where('is_geno_slot', 1)->where('id', $id)->first();
         if (!$this->character) {
             abort(404);
         }
@@ -533,27 +533,27 @@ class CharacterController extends Controller
 
         return view('character.admin._delete_character_modal', [
             'character' => $this->character,
-            'isMyo'     => false,
+            'isGeno'     => false,
         ]);
     }
 
     /**
-     * Shows the delete MYO slot modal.
+     * Shows the delete geno slot modal.
      *
      * @param int $id
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getMyoDelete($id)
+    public function getGenoDelete($id)
     {
-        $this->character = Character::where('is_myo_slot', 1)->where('id', $id)->first();
+        $this->character = Character::where('is_geno_slot', 1)->where('id', $id)->first();
         if (!$this->character) {
             abort(404);
         }
 
         return view('character.admin._delete_character_modal', [
             'character' => $this->character,
-            'isMyo'     => true,
+            'isGeno'     => true,
         ]);
     }
 
@@ -586,16 +586,16 @@ class CharacterController extends Controller
     }
 
     /**
-     * Deletes an MYO slot.
+     * Deletes an geno slot.
      *
      * @param App\Services\CharacterManager $service
      * @param int                           $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postMyoDelete(Request $request, CharacterManager $service, $id)
+    public function postGenoDelete(Request $request, CharacterManager $service, $id)
     {
-        $this->character = Character::where('is_myo_slot', 1)->where('id', $id)->first();
+        $this->character = Character::where('is_geno_slot', 1)->where('id', $id)->first();
         if (!$this->character) {
             abort(404);
         }
@@ -603,7 +603,7 @@ class CharacterController extends Controller
         if ($service->deleteCharacter($this->character, Auth::user())) {
             flash('Character deleted successfully.')->success();
 
-            return redirect()->to('myos');
+            return redirect()->to('genos');
         } else {
             foreach ($service->errors()->getMessages()['error'] as $error) {
                 flash($error)->error();
@@ -640,16 +640,16 @@ class CharacterController extends Controller
     }
 
     /**
-     * Transfers an MYO slot.
+     * Transfers an geno slot.
      *
      * @param App\Services\CharacterManager $service
      * @param int                           $id
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postMyoTransfer(Request $request, CharacterManager $service, $id)
+    public function postGenoTransfer(Request $request, CharacterManager $service, $id)
     {
-        $this->character = Character::where('is_myo_slot', 1)->where('id', $id)->first();
+        $this->character = Character::where('is_geno_slot', 1)->where('id', $id)->first();
         if (!$this->character) {
             abort(404);
         }
@@ -853,14 +853,14 @@ class CharacterController extends Controller
     }
 
     /**
-     * Shows a list of all existing MYO slots.
+     * Shows a list of all existing geno slots.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getMyoIndex()
+    public function getGenoIndex()
     {
-        return view('admin.masterlist.myo_index', [
-            'slots' => Character::myo(1)->orderBy('id', 'DESC')->paginate(30),
+        return view('admin.masterlist.geno_index', [
+            'slots' => Character::geno(1)->orderBy('id', 'DESC')->paginate(30),
         ]);
     }
 }

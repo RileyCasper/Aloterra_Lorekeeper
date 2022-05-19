@@ -54,7 +54,7 @@ class AddSiteSettings extends Command
 
         $this->addSiteSetting('is_reports_open', 1, '0: New reports cannot be made (mods can work on the queue still), 1: Reports are submittable.');
 
-        $this->addSiteSetting('is_myos_open', 1, '0: MYO slots cannot be submitted for design approval, 1: MYO slots can be submitted for approval.');
+        $this->addSiteSetting('is_genos_open', 1, '0: geno slots cannot be submitted for design approval, 1: geno slots can be submitted for approval.');
 
         $this->addSiteSetting('is_design_updates_open', 1, '0: Characters cannot be submitted for design update approval, 1: Characters can be submitted for design update approval.');
 
@@ -64,7 +64,7 @@ class AddSiteSettings extends Command
 
         $this->addSiteSetting('blacklist_key', 0, 'Optional key to view the blacklist. Enter "0" to not require one.');
 
-        $this->addSiteSetting('design_votes_needed', 3, 'Number of approval votes needed for a design update or MYO submission to be considered as having approval.');
+        $this->addSiteSetting('design_votes_needed', 3, 'Number of approval votes needed for a design update or geno submission to be considered as having approval.');
 
         $this->addSiteSetting('admin_user', 1, 'ID of the site\'s admin user.');
 

@@ -26,7 +26,7 @@ class CharacterImageController extends Controller
     */
 
     /**
-     * Shows the add image page. Existing characters only, not MYO slots.
+     * Shows the add image page. Existing characters only, not geno slots.
      *
      * @param string $slug
      *
@@ -46,7 +46,7 @@ class CharacterImageController extends Controller
             'subtypes'  => ['0' => 'Select Subtype'] + Subtype::where('species_id', '=', $this->character->image->species_id)->orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'users'     => User::query()->orderBy('name')->pluck('name', 'id')->toArray(),
             'features'  => Feature::getDropdownItems(),
-            'isMyo'     => false,
+            'isGeno'     => false,
         ]);
     }
 

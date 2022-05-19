@@ -123,7 +123,7 @@ class CharacterLineageBlacklist extends Model
     {
         if(!$character) return 0;
         $level = [
-            $character->is_myo_slot ? 1 : 0,
+            $character->is_geno_slot ? 1 : 0,
             0,
             0,
             0
@@ -158,7 +158,7 @@ class CharacterLineageBlacklist extends Model
     {
         // JOIN
         $query = Character::query()
-            ->where('is_myo_slot', false)
+            ->where('is_geno_slot', false)
             ->whereNotIn('character_category_id', CharacterLineageBlacklist::getBlacklistCategories())
             ->whereNotIn('rarity_id',  CharacterLineageBlacklist::getBlacklistRarities())
             ->join('character_images', 'characters.character_image_id', '=', 'character_images.id')

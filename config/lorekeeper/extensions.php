@@ -57,9 +57,9 @@ return [
         'default_recipient' => 1, // 0 to default to the character's owner (if a user), 1 to default to the submission user.
     ],
 
-    // MYO Image Hide/Remove - Mercury
-    // Adds an option when approving MYO submissions to hide or delete the MYO placeholder image
-    'remove_myo_image' => 1,
+    // geno Image Hide/Remove - Mercury
+    // Adds an option when approving geno submissions to hide or delete the geno placeholder image
+    'remove_geno_image' => 1,
 
     // Auto-populate New Image Traits - Mercury
     // Automatically adds the traits present on a character's active image to the list when uploading a new image for an extant character.

@@ -13,14 +13,14 @@ use Illuminate\Http\Request;
 use Route;
 use Settings;
 
-class MyoController extends Controller
+class GenoController extends Controller
 {
     /*
     |--------------------------------------------------------------------------
-    | MYO Slot Controller
+    | geno Slot Controller
     |--------------------------------------------------------------------------
     |
-    | Handles displaying and acting on an MYO slot.
+    | Handles displaying and acting on an geno slot.
     |
     */
 
@@ -36,8 +36,8 @@ class MyoController extends Controller
                 abort(404);
             }
 
-            if ($check->is_myo_slot) {
-                $query = Character::myo(1)->where('id', $id);
+            if ($check->is_geno_slot) {
+                $query = Character::geno(1)->where('id', $id);
                 if (!(Auth::check() && Auth::user()->hasPower('manage_characters'))) {
                     $query->where('is_visible', 1);
                 }
@@ -55,7 +55,7 @@ class MyoController extends Controller
     }
 
     /**
-     * Shows an MYO slot's masterlist entry.
+     * Shows an geno slot's masterlist entry.
      *
      * @param int $id
      *
@@ -63,13 +63,13 @@ class MyoController extends Controller
      */
     public function getCharacter($id)
     {
-        return view('character.myo.character', [
+        return view('character.geno.character', [
             'character' => $this->character,
         ]);
     }
 
     /**
-     * Shows an MYO slot's profile.
+     * Shows an geno slot's profile.
      *
      * @param int $id
      *
@@ -83,7 +83,7 @@ class MyoController extends Controller
     }
 
     /**
-     * Shows an MYO slot's edit profile page.
+     * Shows an geno slot's edit profile page.
      *
      * @param int $id
      *
@@ -107,7 +107,7 @@ class MyoController extends Controller
     }
 
     /**
-     * Edits an MYO slot's profile.
+     * Edits an geno slot's profile.
      *
      * @param App\Services\CharacterManager $service
      * @param int                           $id
@@ -138,7 +138,7 @@ class MyoController extends Controller
     }
 
     /**
-     * Shows an MYO slot's ownership logs.
+     * Shows an geno slot's ownership logs.
      *
      * @param int $id
      *
@@ -153,7 +153,7 @@ class MyoController extends Controller
     }
 
     /**
-     * Shows an MYO slot's ownership logs.
+     * Shows an geno slot's ownership logs.
      *
      * @param int $id
      *
@@ -168,7 +168,7 @@ class MyoController extends Controller
     }
 
     /**
-     * Shows an MYO slot's submissions.
+     * Shows an geno slot's submissions.
      *
      * @param int $id
      *
@@ -183,7 +183,7 @@ class MyoController extends Controller
     }
 
     /**
-     * Shows an MYO slot's transfer page.
+     * Shows an geno slot's transfer page.
      *
      * @param int $id
      *
@@ -211,7 +211,7 @@ class MyoController extends Controller
     }
 
     /**
-     * Opens a transfer request for an MYO slot.
+     * Opens a transfer request for an geno slot.
      *
      * @param App\Services\CharacterManager $service
      * @param int                           $id
@@ -236,7 +236,7 @@ class MyoController extends Controller
     }
 
     /**
-     * Cancels a transfer request for an MYO slot.
+     * Cancels a transfer request for an geno slot.
      *
      * @param App\Services\CharacterManager $service
      * @param int                           $id
@@ -262,7 +262,7 @@ class MyoController extends Controller
     }
 
     /**
-     * Shows an MYO slot's approval page.
+     * Shows an geno slot's approval page.
      *
      * @param int $id
      *
@@ -276,13 +276,13 @@ class MyoController extends Controller
 
         return view('character.update_form', [
             'character' => $this->character,
-            'queueOpen' => Settings::get('is_myos_open'),
+            'queueOpen' => Settings::get('is_genos_open'),
             'request'   => $this->character->designUpdate()->active()->first(),
         ]);
     }
 
     /**
-     * Opens a new design approval request for an MYO slot.
+     * Opens a new design approval request for an geno slot.
      *
      * @param App\Services\DesignUpdateManager $service
      * @param int                              $id
@@ -296,7 +296,7 @@ class MyoController extends Controller
         }
 
         if ($request = $service->createDesignUpdateRequest($this->character, Auth::user())) {
-            flash('Successfully created new MYO slot approval draft.')->success();
+            flash('Successfully created new geno slot approval draft.')->success();
 
             return redirect()->to($request->url);
         } else {

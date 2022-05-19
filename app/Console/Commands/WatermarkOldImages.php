@@ -51,7 +51,7 @@ class WatermarkOldImages extends Command
                 $images = CharacterImage::all();
             } else {
                 $this->info('Watermarking active images...');
-                $characters = Character::myo(0)->visible()->get();
+                $characters = Character::geno(0)->visible()->get();
                 $images = CharacterImage::whereIn('character_id', $characters->pluck('character_image_id'))->get();
             }
             $this->info('Found '.$images->count().' images to watermark.');

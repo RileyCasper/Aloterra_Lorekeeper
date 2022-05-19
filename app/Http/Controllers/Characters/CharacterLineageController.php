@@ -43,12 +43,12 @@ class CharacterLineageController extends Controller
     }
 
     /**
-     * Shows the MYO slot lineage page.
+     * Shows the geno slot lineage page.
      *
      * @param  int  $id
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getMyoLineage($id)
+    public function getGenoLineage($id)
     {
         return $this->getLineagePage($id, true);
     }
@@ -59,9 +59,9 @@ class CharacterLineageController extends Controller
      * @param  string  $slug
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getLineagePage($id, $isMyo = false)
+    public function getLineagePage($id, $isGeno = false)
     {
-        $this->character = $isMyo ? Character::where('is_myo_slot', 1)->where('id', $id)->first() : Character::where('slug', $id)->first();
+        $this->character = $isGeno ? Character::where('is_geno_slot', 1)->where('id', $id)->first() : Character::where('slug', $id)->first();
         if(!$this->character) abort(404);
         // if they haven't got the option to have descendents...
         if($this->character->getLineageBlacklistLevel() > 0) abort(404);
@@ -74,7 +74,7 @@ class CharacterLineageController extends Controller
             'children' => CharacterLineage::getChildrenStatic($this->character->id, true),
             'grandchildren' => CharacterLineage::getGrandchildrenStatic($this->character->id, true),
             'greatGrandchildren' => CharacterLineage::getGreatGrandchildrenStatic($this->character->id, true),
-            'isMyo' => $isMyo,
+            'isGeno' => $isGeno,
         ]);
     }
 
@@ -117,14 +117,14 @@ class CharacterLineageController extends Controller
      * @param  string  $slug
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getChildren($id, $isMyo = false)
+    public function getChildren($id, $isGeno = false)
     {
-        $this->character = $isMyo ? Character::where('is_myo_slot', 1)->where('id', $id)->first() : Character::where('slug', $id)->first();
+        $this->character = $isGeno ? Character::where('is_geno_slot', 1)->where('id', $id)->first() : Character::where('slug', $id)->first();
         if(!$this->character) abort(404);
         if($this->character->getLineageBlacklistLevel() > 0) abort(404);
 
-        $children = $isMyo ? null : CharacterLineage::getChildrenStatic($this->character->id, false);
-        return $this->getDescendantDisplay($this->character, "Children", $children, $isMyo);
+        $children = $isGeno ? null : CharacterLineage::getChildrenStatic($this->character->id, false);
+        return $this->getDescendantDisplay($this->character, "Children", $children, $isGeno);
     }
 
     /**
@@ -133,14 +133,14 @@ class CharacterLineageController extends Controller
      * @param  string  $slug
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getGrandchildren($id, $isMyo = false)
+    public function getGrandchildren($id, $isGeno = false)
     {
-        $this->character = $isMyo ? Character::where('is_myo_slot', 1)->where('id', $id)->first() : Character::where('slug', $id)->first();
+        $this->character = $isGeno ? Character::where('is_geno_slot', 1)->where('id', $id)->first() : Character::where('slug', $id)->first();
         if(!$this->character) abort(404);
         if($this->character->getLineageBlacklistLevel() > 0) abort(404);
 
-        $children = $isMyo ? null : CharacterLineage::getGrandchildrenStatic($this->character->id, false);
-        return $this->getDescendantDisplay($this->character, "Grandchildren", $children, $isMyo);
+        $children = $isGeno ? null : CharacterLineage::getGrandchildrenStatic($this->character->id, false);
+        return $this->getDescendantDisplay($this->character, "Grandchildren", $children, $isGeno);
     }
 
     /**
@@ -149,23 +149,23 @@ class CharacterLineageController extends Controller
      * @param  string  $slug
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getGreatGrandchildren($id, $isMyo = false)
+    public function getGreatGrandchildren($id, $isGeno = false)
     {
-        $this->character = $isMyo ? Character::where('is_myo_slot', 1)->where('id', $id)->first() : Character::where('slug', $id)->first();
+        $this->character = $isGeno ? Character::where('is_geno_slot', 1)->where('id', $id)->first() : Character::where('slug', $id)->first();
         if(!$this->character) abort(404);
         if($this->character->getLineageBlacklistLevel() > 0) abort(404);
 
-        $children = $isMyo ? null : CharacterLineage::getGreatGrandchildrenStatic($this->character->id, false);
-        return $this->getDescendantDisplay($this->character, "Great-Grandchildren", $children, $isMyo);
+        $children = $isGeno ? null : CharacterLineage::getGreatGrandchildrenStatic($this->character->id, false);
+        return $this->getDescendantDisplay($this->character, "Great-Grandchildren", $children, $isGeno);
     }
 
-    private function getDescendantDisplay($character, $title, $descendants, $isMyo = false)
+    private function getDescendantDisplay($character, $title, $descendants, $isGeno = false)
     {
         return view('character.lineage_children', [
             'character' => $character,
             'title' => $title,
             'children' => $descendants,
-            'isMyo' => $isMyo,
+            'isGeno' => $isGeno,
         ]);
     }
 }

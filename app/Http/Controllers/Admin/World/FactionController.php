@@ -207,7 +207,7 @@ class FactionController extends Controller
             'figures' => Figure::all()->pluck('name','id')->toArray(),
             'figureOptions' => Figure::all()->where('faction_id', $faction->id)->pluck('name','id')->toArray(),
             'users' => User::visible()->where('faction_id', $faction->id)->orderBy('name')->pluck('name', 'id')->toArray(),
-            'characters' => Character::visible()->myo(0)->where('faction_id', $faction->id)->orderBy('sort','DESC')->get()->pluck('fullName','id')->toArray(),
+            'characters' => Character::visible()->geno(0)->where('faction_id', $faction->id)->orderBy('sort','DESC')->get()->pluck('fullName','id')->toArray(),
             'ch_enabled' => Settings::get('WE_character_factions'),
             'user_enabled' => Settings::get('WE_user_factions')
         ]);

@@ -34,7 +34,7 @@ class SlotService extends Service
             'rarities'  => ['0' => 'Select Rarity'] + Rarity::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'specieses' => ['0' => 'Select Species'] + Species::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
             'subtypes'  => ['0' => 'Select Subtype'] + Subtype::orderBy('sort', 'DESC')->pluck('name', 'id')->toArray(),
-            'isMyo'     => true,
+            'isGeno'     => true,
         ];
     }
 
@@ -149,8 +149,8 @@ class SlotService extends Service
                         //other vital data that is default
                         $characterData['name'] = isset($characterData['name']) ? $characterData['name'] : 'Slot';
                         $characterData['transferrable_at'] = null;
-                        $characterData['is_myo_slot'] = 1;
-                        //this uses your default MYO slot image from the CharacterManager
+                        $characterData['is_geno_slot'] = 1;
+                        //this uses your default geno slot image from the CharacterManager
                         //see wiki page for documentation on adding a default image switch
                         $characterData['use_cropper'] = 0;
                         $characterData['x0'] = null;
@@ -191,7 +191,7 @@ class SlotService extends Service
                         // Distribute user rewards
                         $charService = new CharacterManager;
                         if ($character = $charService->createCharacter($characterData, $user, true)) {
-                            flash('<a href="'.$character->url.'">MYO slot</a> created successfully.')->success();
+                            flash('<a href="'.$character->url.'">geno slot</a> created successfully.')->success();
                         } else {
                             throw new \Exception('Failed to use slot.');
                         }

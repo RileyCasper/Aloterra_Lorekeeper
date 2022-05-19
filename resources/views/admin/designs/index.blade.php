@@ -1,23 +1,23 @@
 @extends('admin.layout')
 
-@section('admin-title') {{ $isMyo ? 'MYO Approval' : 'Design Update' }} Queue @endsection
+@section('admin-title') {{ $isGeno ? 'geno Approval' : 'Design Update' }} Queue @endsection
 
 @section('admin-content')
-{!! breadcrumbs(['Admin Panel' => 'admin', ($isMyo ? 'MYO Approval' : 'Design Update').' Queue' => 'admin/designs/pending']) !!}
+{!! breadcrumbs(['Admin Panel' => 'admin', ($isGeno ? 'geno Approval' : 'Design Update').' Queue' => 'admin/designs/pending']) !!}
 
 <h1>
-    {{ $isMyo ? 'MYO Approval' : 'Design Update' }} Queue
+    {{ $isGeno ? 'geno Approval' : 'Design Update' }} Queue
 </h1>
 
 <ul class="nav nav-tabs mb-3">
     <li class="nav-item">
-        <a class="nav-link {{ set_active('admin/'.($isMyo ? 'myo-approvals' : 'design-approvals').'/pending*') }}" href="{{ url('admin/'.($isMyo ? 'myo-approvals' : 'design-approvals').'/pending') }}">Pending</a>
+        <a class="nav-link {{ set_active('admin/'.($isGeno ? 'geno-approvals' : 'design-approvals').'/pending*') }}" href="{{ url('admin/'.($isGeno ? 'geno-approvals' : 'design-approvals').'/pending') }}">Pending</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link {{ set_active('admin/'.($isMyo ? 'myo-approvals' : 'design-approvals').'/approved*') }}" href="{{ url('admin/'.($isMyo ? 'myo-approvals' : 'design-approvals').'/approved') }}">Approved</a>
+        <a class="nav-link {{ set_active('admin/'.($isGeno ? 'geno-approvals' : 'design-approvals').'/approved*') }}" href="{{ url('admin/'.($isGeno ? 'geno-approvals' : 'design-approvals').'/approved') }}">Approved</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link {{ set_active('admin/'.($isMyo ? 'myo-approvals' : 'design-approvals').'/rejected*') }}" href="{{ url('admin/'.($isMyo ? 'myo-approvals' : 'design-approvals').'/rejected') }}">Rejected</a>
+        <a class="nav-link {{ set_active('admin/'.($isGeno ? 'geno-approvals' : 'design-approvals').'/rejected*') }}" href="{{ url('admin/'.($isGeno ? 'geno-approvals' : 'design-approvals').'/rejected') }}">Rejected</a>
     </li>
 </ul>
 
@@ -25,7 +25,7 @@
 <div class="mb-4 logs-table">
     <div class="logs-table-header">
         <div class="row">
-            <div class="col-md-3"><div class="logs-table-cell">{{ $isMyo ? 'MYO Slot' : 'Character' }}</div></div>
+            <div class="col-md-3"><div class="logs-table-cell">{{ $isGeno ? 'geno Slot' : 'Character' }}</div></div>
             <div class="col-3 col-md-3"><div class="logs-table-cell">User</div></div>
             <div class="col-2 col-md-2"><div class="logs-table-cell">Submitted</div></div>
             @if(Config::get('lorekeeper.extensions.design_update_voting'))

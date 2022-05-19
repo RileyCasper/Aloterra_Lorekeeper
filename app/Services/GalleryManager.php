@@ -80,7 +80,7 @@ class GalleryManager extends Service
 
             // Check that associated characters exist
             if (isset($data['slug'])) {
-                $characters = Character::myo(0)->visible()->whereIn('slug', $data['slug'])->get();
+                $characters = Character::geno(0)->visible()->whereIn('slug', $data['slug'])->get();
                 if (count($characters) != count($data['slug'])) {
                     throw new \Exception('One or more of the selected characters does not exist, or you have entered a duplicate.');
                 }
@@ -261,7 +261,7 @@ class GalleryManager extends Service
 
             // Check that associated characters exist
             if (isset($data['slug'])) {
-                $characters = Character::myo(0)->visible()->whereIn('slug', $data['slug'])->get();
+                $characters = Character::geno(0)->visible()->whereIn('slug', $data['slug'])->get();
                 if (count($characters) != count($data['slug'])) {
                     throw new \Exception('One or more of the selected characters does not exist, or you have entered a duplicate.');
                 }

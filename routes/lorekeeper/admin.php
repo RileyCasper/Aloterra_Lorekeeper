@@ -410,10 +410,10 @@ Route::group(['prefix' => 'masterlist', 'namespace' => 'Characters', 'middleware
     Route::get('trade/act/{id}/{type}', 'CharacterController@getTradeModal');
     Route::post('trade/{id}', 'CharacterController@postTradeQueue');
 
-    Route::get('create-myo', 'CharacterController@getCreateMyo');
-    Route::post('create-myo', 'CharacterController@postCreateMyo');
+    Route::get('create-geno', 'CharacterController@getCreateGeno');
+    Route::post('create-geno', 'CharacterController@postCreateGeno');
 
-    Route::get('check-subtype', 'CharacterController@getCreateCharacterMyoSubtype');
+    Route::get('check-subtype', 'CharacterController@getCreateCharacterGenoSubtype');
 });
 Route::group(['prefix' => 'character', 'namespace' => 'Characters', 'middleware' => 'power:edit_inventories'], function () {
     Route::post('{slug}/grant', 'GrantController@postCharacterCurrency');
@@ -475,27 +475,27 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters', 'middleware'
     Route::post('{slug}/lineage', 'CharacterLineageController@postEditCharacterLineage');
 });
 // Might rewrite these parts eventually so there's less code duplication...
-Route::group(['prefix' => 'myo', 'namespace' => 'Characters', 'middleware' => 'power:manage_characters'], function () {
+Route::group(['prefix' => 'geno', 'namespace' => 'Characters', 'middleware' => 'power:manage_characters'], function () {
     // CHARACTER
-    Route::get('{id}/stats', 'CharacterController@getEditMyoStats');
-    Route::post('{id}/stats', 'CharacterController@postEditMyoStats');
+    Route::get('{id}/stats', 'CharacterController@getEditGenoStats');
+    Route::post('{id}/stats', 'CharacterController@postEditGenoStats');
 
-    Route::get('{id}/description', 'CharacterController@getEditMyoDescription');
-    Route::post('{id}/description', 'CharacterController@postEditMyoDescription');
+    Route::get('{id}/description', 'CharacterController@getEditGenoDescription');
+    Route::post('{id}/description', 'CharacterController@postEditGenoDescription');
 
-    Route::get('{id}/profile', 'CharacterController@getEditMyoProfile');
-    Route::post('{id}/profile', 'CharacterController@postEditMyoProfile');
+    Route::get('{id}/profile', 'CharacterController@getEditGenoProfile');
+    Route::post('{id}/profile', 'CharacterController@postEditGenoProfile');
 
-    Route::get('{id}/delete', 'CharacterController@getMyoDelete');
-    Route::post('{id}/delete', 'CharacterController@postMyoDelete');
+    Route::get('{id}/delete', 'CharacterController@getGenoDelete');
+    Route::post('{id}/delete', 'CharacterController@postGenoDelete');
 
-    Route::post('{id}/settings', 'CharacterController@postMyoSettings');
+    Route::post('{id}/settings', 'CharacterController@postGenoSettings');
 
-    Route::post('{id}/transfer', 'CharacterController@postMyoTransfer');
+    Route::post('{id}/transfer', 'CharacterController@postGenoTransfer');
 
     # LINEAGE
-    Route::get('{id}/lineage', 'CharacterLineageController@getEditMyoLineage');
-    Route::post('{id}/lineage', 'CharacterLineageController@postEditMyoLineage');
+    Route::get('{id}/lineage', 'CharacterLineageController@getEditGenoLineage');
+    Route::post('{id}/lineage', 'CharacterLineageController@postEditGenoLineage');
 });
 
 // RAFFLES
@@ -556,7 +556,7 @@ Route::group(['prefix' => 'designs', 'middleware' => 'power:manage_characters'],
     Route::post('vote/{id}/{action}', 'DesignController@postVote')->where('action', 'approve|reject');
 });
 
-Route::get('{type}/{status}', 'DesignController@getDesignIndex')->where('type', 'myo-approvals|design-approvals')->where('status', 'pending|approved|rejected');
+Route::get('{type}/{status}', 'DesignController@getDesignIndex')->where('type', 'geno-approvals|design-approvals')->where('status', 'pending|approved|rejected');
 
 # STATS - STATS
 Route::group(['prefix' => 'stats', 'namespace' => 'Stats', 'middleware' => 'power:edit_stats'], function() {

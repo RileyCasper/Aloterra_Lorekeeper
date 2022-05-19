@@ -56,7 +56,7 @@ Route::group(['prefix' => 'user', 'namespace' => 'Users'], function () {
     Route::get('{name}/aliases', 'UserController@getUserAliases');
     Route::get('{name}/characters', 'UserController@getUserCharacters');
     Route::get('{name}/sublist/{key}', 'UserController@getUserSublist');
-    Route::get('{name}/myos', 'UserController@getUserMyoSlots');
+    Route::get('{name}/genos', 'UserController@getUserGenoSlots');
     Route::get('{name}/breeding-permissions', 'UserController@getUserBreedingPermissions');
     Route::get('{name}/inventory', 'UserController@getUserInventory');
     Route::get('{name}/pets', 'UserController@getUserPets');
@@ -81,7 +81,7 @@ Route::group(['prefix' => 'user', 'namespace' => 'Users'], function () {
     Characters
 **************************************************************************************************/
 Route::get('/masterlist', 'BrowseController@getCharacters');
-Route::get('/myos', 'BrowseController@getMyos');
+Route::get('/genos', 'BrowseController@getGenos');
 Route::get('/sublist/{key}', 'BrowseController@getSublist');
 Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function () {
     Route::get('{slug}', 'CharacterController@getCharacter');
@@ -114,11 +114,11 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function ()
     Route::get('{slug}/grandchildren', 'CharacterLineageController@getCharacterGrandChildren');
     Route::get('{slug}/great-grandchildren', 'CharacterLineageController@getCharacterGreatGrandChildren');
 });
-Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function () {
-    Route::get('{id}', 'MyoController@getCharacter');
-    Route::get('{id}/profile', 'MyoController@getCharacterProfile');
-    Route::get('{id}/ownership', 'MyoController@getCharacterOwnershipLogs');
-    Route::get('{id}/change-log', 'MyoController@getCharacterLogs');
+Route::group(['prefix' => 'geno', 'namespace' => 'Characters'], function () {
+    Route::get('{id}', 'GenoController@getCharacter');
+    Route::get('{id}/profile', 'GenoController@getCharacterProfile');
+    Route::get('{id}/ownership', 'GenoController@getCharacterOwnershipLogs');
+    Route::get('{id}/change-log', 'GenoController@getCharacterLogs');
 });
 
 /**************************************************************************************************

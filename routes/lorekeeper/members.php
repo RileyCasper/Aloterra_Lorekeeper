@@ -103,7 +103,7 @@ Route::group(['prefix' => 'characters', 'namespace' => 'Users'], function() {
     Route::get('transfers/{type}', 'CharacterController@getTransfers');
     Route::post('transfer/act/{id}', 'CharacterController@postHandleTransfer');
 
-    Route::get('myos', 'CharacterController@getMyos');
+    Route::get('genos', 'CharacterController@getGenos');
 
     # CLASS
     Route::get('class/edit/{id}', 'CharacterController@getClassModal');
@@ -176,16 +176,16 @@ Route::group(['prefix' => 'character', 'namespace' => 'Characters'], function ()
     Route::post('{slug}/level-area/exp-grant', 'LevelController@postExpGrant');
     Route::post('{slug}/level-area/stat-grant', 'LevelController@postStatGrant');
 });
-Route::group(['prefix' => 'myo', 'namespace' => 'Characters'], function () {
-    Route::get('{id}/profile/edit', 'MyoController@getEditCharacterProfile');
-    Route::post('{id}/profile/edit', 'MyoController@postEditCharacterProfile');
+Route::group(['prefix' => 'geno', 'namespace' => 'Characters'], function () {
+    Route::get('{id}/profile/edit', 'GenoController@getEditCharacterProfile');
+    Route::post('{id}/profile/edit', 'GenoController@postEditCharacterProfile');
 
-    Route::get('{id}/transfer', 'MyoController@getTransfer');
-    Route::post('{id}/transfer', 'MyoController@postTransfer');
-    Route::post('{id}/transfer/{id2}/cancel', 'MyoController@postCancelTransfer');
+    Route::get('{id}/transfer', 'GenoController@getTransfer');
+    Route::post('{id}/transfer', 'GenoController@postTransfer');
+    Route::post('{id}/transfer/{id2}/cancel', 'GenoController@postCancelTransfer');
 
-    Route::post('{id}/approval', 'MyoController@postCharacterApproval');
-    Route::get('{id}/approval', 'MyoController@getCharacterApproval');
+    Route::post('{id}/approval', 'GenoController@postCharacterApproval');
+    Route::get('{id}/approval', 'GenoController@getCharacterApproval');
 });
 Route::group(['prefix' => 'breeding-permissions', 'namespace' => 'Users'], function() {
     Route::get('/', 'AccountController@getBreedingPermissions');

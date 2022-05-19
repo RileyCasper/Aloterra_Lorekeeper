@@ -198,7 +198,7 @@ CREATE TABLE `characters` (
   `character_image_id` int(10) unsigned DEFAULT NULL,
   `user_id` int(10) unsigned DEFAULT NULL,
   `sort` int(10) unsigned NOT NULL DEFAULT 0,
-  `is_myo_slot` tinyint(1) NOT NULL DEFAULT 0,
+  `is_geno_slot` tinyint(1) NOT NULL DEFAULT 0,
   `rarity_id` int(10) unsigned DEFAULT NULL,
   `trade_id` int(10) unsigned DEFAULT NULL,
   `is_gift_writing_allowed` tinyint(1) NOT NULL DEFAULT 0,
@@ -309,7 +309,7 @@ CREATE TABLE `design_updates` (
   `deleted_at` timestamp NULL DEFAULT NULL,
   `submitted_at` timestamp NULL DEFAULT NULL,
   `subtype_id` int(10) unsigned DEFAULT NULL,
-  `update_type` enum('MYO','Character') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `update_type` enum('geno','Character') COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `design_updates_character_id_index` (`character_id`),
   KEY `design_updates_user_id_index` (`user_id`),
@@ -956,7 +956,7 @@ INSERT INTO `migrations` VALUES (29,'2019_07_15_090200_add_prompt_rewards',1);
 INSERT INTO `migrations` VALUES (30,'2019_07_21_161720_add_prompt_submissions',1);
 INSERT INTO `migrations` VALUES (31,'2019_08_06_092958_add_submission_count_to_user_settings',1);
 INSERT INTO `migrations` VALUES (32,'2019_08_09_123451_make_submission_prompt_id_nullable',1);
-INSERT INTO `migrations` VALUES (33,'2019_08_10_120818_add_myo_slots',1);
+INSERT INTO `migrations` VALUES (33,'2019_08_10_120818_add_geno_slots',1);
 INSERT INTO `migrations` VALUES (34,'2019_08_24_101751_add_design_updates',1);
 INSERT INTO `migrations` VALUES (35,'2019_09_02_101303_drop_images_character_foreign_key',1);
 INSERT INTO `migrations` VALUES (36,'2019_09_08_060400_drop_character_images_foreign_keys',1);
@@ -976,7 +976,7 @@ INSERT INTO `migrations` VALUES (49,'2020_03_14_124534_add_subtypes',1);
 INSERT INTO `migrations` VALUES (50,'2020_03_23_075539_add_images_to_prompts',1);
 INSERT INTO `migrations` VALUES (51,'2020_03_27_113928_add_subtype_to_features',1);
 INSERT INTO `migrations` VALUES (52,'2020_04_25_114747_drop_log_foreign_keys',1);
-INSERT INTO `migrations` VALUES (53,'2020_05_02_152118_drop_character_myo_counts',1);
+INSERT INTO `migrations` VALUES (53,'2020_05_02_152118_drop_character_geno_counts',1);
 INSERT INTO `migrations` VALUES (54,'2020_06_01_124250_add_parsed_submission_comments',1);
 INSERT INTO `migrations` VALUES (55,'2020_07_31_185640_add_type_to_design_updates',1);
 INSERT INTO `migrations` VALUES (56,'2020_07_31_193235_set_design_update_type_null',1);

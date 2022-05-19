@@ -128,7 +128,7 @@ class UserController extends Controller
      */
     public function getUserCharacters($name)
     {
-        $query = Character::myo(0)->where('user_id', $this->user->id);
+        $query = Character::geno(0)->where('user_id', $this->user->id);
         $imageQuery = CharacterImage::images(Auth::check() ? Auth::user() : null)->with('features')->with('rarity')->with('species')->with('features');
 
         if ($sublists = Sublist::where('show_main', 0)->get()) {
@@ -167,7 +167,7 @@ class UserController extends Controller
      */
     public function getUserSublist($name, $key)
     {
-        $query = Character::myo(0)->where('user_id', $this->user->id);
+        $query = Character::geno(0)->where('user_id', $this->user->id);
         $imageQuery = CharacterImage::images(Auth::check() ? Auth::user() : null)->with('features')->with('rarity')->with('species')->with('features');
 
         $sublist = Sublist::where('key', $key)->first();
@@ -199,22 +199,22 @@ class UserController extends Controller
     }
 
     /**
-     * Shows a user's MYO slots.
+     * Shows a user's geno slots.
      *
      * @param string $name
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getUserMyoSlots($name)
+    public function getUserGenoSlots($name)
     {
-        $myo = $this->user->myoSlots();
+        $geno = $this->user->genoSlots();
         if (!Auth::check() || !(Auth::check() && Auth::user()->hasPower('manage_characters'))) {
-            $myo->visible();
+            $geno->visible();
         }
 
-        return view('user.myo_slots', [
+        return view('user.geno_slots', [
             'user'     => $this->user,
-            'myos'     => $myo->get(),
+            'genos'     => $geno->get(),
             'sublists' => Sublist::orderBy('sort', 'DESC')->get(),
         ]);
     }

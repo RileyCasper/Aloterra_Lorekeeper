@@ -15,7 +15,7 @@
         <div class="text-right mb-3"><a href="#advancedSearch" class="btn btn-sm btn-outline-info" data-toggle="collapse">Show Advanced Search Options <i class="fas fa-caret-down"></i></a></div>
         <div class="card bg-light mb-3 collapse" id="advancedSearch">
             <div class="card-body masterlist-advanced-search">
-                @if(!$isMyo)
+                @if(!$isGeno)
                     <div class="masterlist-search-field">
                         {!! Form::label('character_category_id', 'Category: ') !!}
                         {!! Form::select('character_category_id', $categories, Request::get('character_category_id'), ['class' => 'form-control']) !!}
@@ -60,7 +60,7 @@
                     {!! Form::label('sale_value_max', 'Resale Maximum ($): ') !!}
                     {!! Form::text('sale_value_max', Request::get('sale_value_max'), ['class' => 'form-control']) !!}
                 </div>
-                @if(!$isMyo)
+                @if(!$isGeno)
                     <div class="masterlist-search-field">
                         {!! Form::label('is_gift_art_allowed', 'Gift Art Status: ') !!}
                         {!! Form::select('is_gift_art_allowed', [0 => 'Any', 2 => 'Ask First', 1 => 'Yes', 3 => 'Yes OR Ask First'], Request::get('is_gift_art_allowed'), ['class' => 'form-control']) !!}

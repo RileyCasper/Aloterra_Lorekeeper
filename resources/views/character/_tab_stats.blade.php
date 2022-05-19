@@ -2,7 +2,7 @@
     <div class="col-lg-3 col-4"><h5>Owner</h5></div>
     <div class="col-lg-9 col-8">{!! $character->displayOwner !!}</div>
 </div>
-@if(!$character->is_myo_slot)
+@if(!$character->is_geno_slot)
     <div class="row">
         <div class="col-lg-3 col-4"><h5>Category</h5></div>
         <div class="col-lg-9 col-8">{!! $character->category->displayName !!}</div>
@@ -30,6 +30,6 @@
 @endif
 @if(Auth::check() && Auth::user()->hasPower('manage_characters'))
     <div class="mt-3">
-        <a href="#" class="btn btn-outline-info btn-sm edit-stats" data-{{ $character->is_myo_slot ? 'id' : 'slug' }}="{{ $character->is_myo_slot ? $character->id : $character->slug }}"><i class="fas fa-cog"></i> Edit</a>
+        <a href="#" class="btn btn-outline-info btn-sm edit-stats" data-{{ $character->is_geno_slot ? 'id' : 'slug' }}="{{ $character->is_geno_slot ? $character->id : $character->slug }}"><i class="fas fa-cog"></i> Edit</a>
     </div>
 @endif

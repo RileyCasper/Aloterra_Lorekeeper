@@ -36,7 +36,7 @@ class LevelController extends Controller
     {
         $this->middleware(function ($request, $next) {
             $slug = Route::current()->parameter('slug');
-            $query = Character::myo(0)->where('slug', $slug);
+            $query = Character::geno(0)->where('slug', $slug);
             if(!(Auth::check() && Auth::user()->hasPower('manage_characters'))) $query->where('is_visible', 1);
             $this->character = $query->first();
             if(!$this->character) abort(404);

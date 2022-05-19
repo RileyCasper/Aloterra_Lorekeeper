@@ -71,10 +71,10 @@
         {!! Form::checkbox('invalidate_old', 1, true, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
         {!! Form::label('invalidate_old', 'Invalidate Old Image', ['class' => 'form-check-label ml-3']) !!}  {!! add_help('This will mark the last image attached to the character as an invalid reference.') !!}
     </div>
-    @if(Config::get('lorekeeper.extensions.remove_myo_image') && $request->character->is_myo_slot)
+    @if(Config::get('lorekeeper.extensions.remove_geno_image') && $request->character->is_geno_slot)
         <div class="form-group">
-            {!! Form::label('Remove MYO Image') !!}  {!! add_help('This will either hide or delete the MYO slot placeholder image if set.') !!}
-            {!! Form::select('remove_myo_image', [0 => 'Leave MYO Image', 1 => 'Hide MYO Image', 2 => 'Delete MYO Image'], null, ['class' => 'form-control']) !!}
+            {!! Form::label('Remove geno Image') !!}  {!! add_help('This will either hide or delete the geno slot placeholder image if set.') !!}
+            {!! Form::select('remove_geno_image', [0 => 'Leave geno Image', 1 => 'Hide geno Image', 2 => 'Delete geno Image'], null, ['class' => 'form-control']) !!}
         </div>
     @endif
 

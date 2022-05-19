@@ -179,11 +179,11 @@ return [
         'url'     => 'claims/view/{submission_id}',
     ],
 
-    // MYO_GRANT
+    // geno_GRANT
     24 => [
-        'name'    => 'MYO Grant',
-        'message' => 'A new MYO slot (<a href="{character_url}">{name}</a>) has been created for you. (<a href="{url}">View MYO Slots</a>)',
-        'url'     => 'myos',
+        'name'    => 'geno Grant',
+        'message' => 'A new geno slot (<a href="{character_url}">{name}</a>) has been created for you. (<a href="{url}">View geno Slots</a>)',
+        'url'     => 'genos',
     ],
 
     // DESIGN_APPROVED

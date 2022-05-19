@@ -1,12 +1,12 @@
-@extends('character.layout', ['isMyo' => $character->is_myo_slot])
+@extends('character.layout', ['isGeno' => $character->is_geno_slot])
 
 @section('profile-title') Editing {{ $character->fullName }}'s Profile @endsection
 
 @section('meta-img') {{ $character->image->thumbnailUrl }} @endsection
 
 @section('profile-content')
-@if($character->is_myo_slot)
-{!! breadcrumbs(['MYO Slot Masterlist' => 'myos', $character->fullName => $character->url, 'Editing Profile' => $character->url . '/profile/edit']) !!}
+@if($character->is_geno_slot)
+{!! breadcrumbs(['geno Slot Masterlist' => 'genos', $character->fullName => $character->url, 'Editing Profile' => $character->url . '/profile/edit']) !!}
 @else
 {!! breadcrumbs([($character->category->masterlist_sub_id ? $character->category->sublist->name.' Masterlist' : 'Character masterlist') => ($character->category->masterlist_sub_id ? 'sublist/'.$character->category->sublist->key : 'masterlist' ), $character->fullName => $character->url, 'Editing Profile' => $character->url . '/profile/edit']) !!}
 @endif
@@ -20,7 +20,7 @@
 @endif
 
 {!! Form::open(['url' => $character->url . '/profile/edit']) !!}
-@if(!$character->is_myo_slot)
+@if(!$character->is_geno_slot)
     <div class="form-group">
         {!! Form::label('name', 'Name') !!}
         {!! Form::text('name', $character->name, ['class' => 'form-control']) !!}
@@ -33,7 +33,7 @@
     @endif
 @endif
 
-@if(!$character->is_myo_slot && ($char_enabled == 2 || (Auth::user()->isStaff && $char_enabled == 3)))
+@if(!$character->is_geno_slot && ($char_enabled == 2 || (Auth::user()->isStaff && $char_enabled == 3)))
 @if(Auth::user()->isStaff && $char_enabled == 3)
     <div class="alert alert-warning">You can edit this because you are a staff member. Normal users cannot edit their character locations freely.</div>
 @endif
@@ -45,7 +45,7 @@
 </div>
 @endif
 
-@if(!$character->is_myo_slot && ($char_faction_enabled == 2 || (Auth::user()->isStaff && $char_faction_enabled == 3)))
+@if(!$character->is_geno_slot && ($char_faction_enabled == 2 || (Auth::user()->isStaff && $char_faction_enabled == 3)))
 @if(Auth::user()->isStaff && $char_faction_enabled == 3)
     <div class="alert alert-warning">You can edit this because you are a staff member. Normal users cannot edit their character factions freely.</div>
 @endif
@@ -64,7 +64,7 @@
 </div>
 
 @if($character->user_id == Auth::user()->id)
-    @if(!$character->is_myo_slot)
+    @if(!$character->is_geno_slot)
         <div class="row">
             <div class="col-md form-group">
                 {!! Form::label('is_gift_art_allowed', 'Allow Gift Art', ['class' => 'form-check-label mb-3']) !!} {!! add_help('This will place the character on the list of characters that can be drawn for gift art. This does not have any other functionality, but allow users looking for characters to draw to find your character easily.') !!}

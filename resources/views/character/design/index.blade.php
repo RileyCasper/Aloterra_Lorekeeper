@@ -8,7 +8,7 @@
 @if($status == 'draft')
     <h1>Design Approval Drafts</h1>
 
-    <p>Design approval requests allow you to submit updates to your character's design, or submit a finished design for a MYO slot. To create a new approval request, go to the character or MYO slot's page and choose "Update Design" from the sidebar.</p>
+    <p>Design approval requests allow you to submit updates to your character's design, or submit a finished design for a geno slot. To create a new approval request, go to the character or geno slot's page and choose "Update Design" from the sidebar.</p>
 @else
     <h1>
         Design Approvals
@@ -34,7 +34,7 @@
     <table class="table table-sm">
         <thead>
             <tr>
-                <th>Character/MYO Slot</th>
+                <th>Character/geno Slot</th>
                 <th width="20%">Submitted</th>
                 @if ($status != 'draft')
                     <th width="20%">Status</th>

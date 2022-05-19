@@ -1,9 +1,9 @@
-@extends('character.layout', ['isMyo' => true])
+@extends('character.layout', ['isGeno' => true])
 
 @section('profile-title') {{ $character->fullName }} @endsection
 
 @section('profile-content')
-{!! breadcrumbs(['MYO Slot Masterlist' => 'myos', $character->fullName => $character->url]) !!}
+{!! breadcrumbs(['geno Slot Masterlist' => 'genos', $character->fullName => $character->url]) !!}
 
 @include('character._header', ['character' => $character])
 
@@ -49,7 +49,7 @@
         </div>
         @if(Auth::check() && Auth::user()->hasPower('manage_characters'))
             <div class="tab-pane fade" id="settings-all">
-                {!! Form::open(['url' => $character->is_myo_slot ? 'admin/myo/'.$character->id.'/settings' : 'admin/character/'.$character->slug.'/settings']) !!}
+                {!! Form::open(['url' => $character->is_geno_slot ? 'admin/geno/'.$character->id.'/settings' : 'admin/character/'.$character->slug.'/settings']) !!}
                     <div class="form-group">
                         {!! Form::checkbox('is_visible', 1, $character->is_visible, ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
                         {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help('Turn this off to hide the character. Only mods with the Manage Masterlist power (that\'s you!) can view it - the owner will also not be able to see the character\'s page.') !!}

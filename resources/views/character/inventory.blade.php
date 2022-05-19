@@ -1,10 +1,10 @@
-@extends('character.layout', ['isMyo' => $character->is_myo_slot])
+@extends('character.layout', ['isGeno' => $character->is_geno_slot])
 
 @section('profile-title') {{ $character->fullName }}'s Inventory @endsection
 
 @section('profile-content')
-@if($character->is_myo_slot)
-{!! breadcrumbs(['MYO Slot Masterlist' => 'myos', $character->fullName => $character->url, 'Inventory' => $character->url.'/inventory']) !!}
+@if($character->is_geno_slot)
+{!! breadcrumbs(['geno Slot Masterlist' => 'genos', $character->fullName => $character->url, 'Inventory' => $character->url.'/inventory']) !!}
 @else
 {!! breadcrumbs([($character->category->masterlist_sub_id ? $character->category->sublist->name.' Masterlist' : 'Character masterlist') => ($character->category->masterlist_sub_id ? 'sublist/'.$character->category->sublist->key : 'masterlist' ), $character->fullName => $character->url, 'Inventory' => $character->url.'/inventory']) !!}
 @endif

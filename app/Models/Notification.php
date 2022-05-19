@@ -125,7 +125,7 @@ class Notification extends Model
     const SUBMISSION_REJECTED               = 21;
     const CLAIM_APPROVED                    = 22;
     const CLAIM_REJECTED                    = 23;
-    const MYO_GRANT                         = 24;
+    const geno_GRANT                         = 24;
     const DESIGN_APPROVED                   = 25;
     const DESIGN_REJECTED                   = 26;
     const DESIGN_CANCELED                   = 27;

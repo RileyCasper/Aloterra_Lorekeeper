@@ -1,12 +1,12 @@
-@extends('character.layout', ['isMyo' => $character->is_myo_slot])
+@extends('character.layout', ['isGeno' => $character->is_geno_slot])
 
 @section('profile-title') {{ $character->fullName }}'s Change Log @endsection
 
 @section('meta-img') {{ $character->image->thumbnailUrl }} @endsection
 
 @section('profile-content')
-@if($character->is_myo_slot)
-{!! breadcrumbs(['MYO Slot Masterlist' => 'myos', $character->fullName => $character->url, 'Change Log' => $character->url.'/change-log']) !!}
+@if($character->is_geno_slot)
+{!! breadcrumbs(['geno Slot Masterlist' => 'genos', $character->fullName => $character->url, 'Change Log' => $character->url.'/change-log']) !!}
 @else
 {!! breadcrumbs([($character->category->masterlist_sub_id ? $character->category->sublist->name.' Masterlist' : 'Character masterlist') => ($character->category->masterlist_sub_id ? 'sublist/'.$character->category->sublist->key : 'masterlist' ), $character->fullName => $character->url, 'Change Log' => $character->url.'/change-log']) !!}
 @endif

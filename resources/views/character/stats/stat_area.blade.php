@@ -1,4 +1,4 @@
-@extends('character.layout', ['isMyo' => $character->is_myo_slot])
+@extends('character.layout', ['isGeno' => $character->is_geno_slot])
 
 @section('profile-title') Stat Area @endsection
 

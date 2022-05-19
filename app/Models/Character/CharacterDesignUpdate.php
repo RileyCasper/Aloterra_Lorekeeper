@@ -169,15 +169,15 @@ class CharacterDesignUpdate extends Model
     }
 
     /**
-     * Scope a query to only include MYO slot approval requests.
+     * Scope a query to only include geno slot approval requests.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeMyos($query)
+    public function scopeGenos($query)
     {
-        $query->select('design_updates.*')->where('update_type', 'MYO');
+        $query->select('design_updates.*')->where('update_type', 'geno');
     }
 
     /**

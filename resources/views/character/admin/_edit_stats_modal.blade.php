@@ -1,5 +1,5 @@
-{!! Form::open(['url' => $isMyo ? 'admin/myo/'.$character->id.'/stats' : 'admin/character/'.$character->slug.'/stats']) !!}
-    @if($isMyo)
+{!! Form::open(['url' => $isGeno ? 'admin/geno/'.$character->id.'/stats' : 'admin/character/'.$character->slug.'/stats']) !!}
+    @if($isGeno)
         <div class="form-group">
             {!! Form::label('Name') !!}
             {!! Form::text('name', $character->name, ['class' => 'form-control']) !!}

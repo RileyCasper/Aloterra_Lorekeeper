@@ -43,12 +43,12 @@ class CharacterLineageController extends Controller
     }
 
     /**
-     * Shows the MYO slot lineage page.
+     * Shows the geno slot lineage page.
      *
      * @param  int  $id
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getMyoLineagePage($id)
+    public function getGenoLineagePage($id)
     {
         return $this->getLineagePage($id, true);
     }
@@ -59,9 +59,9 @@ class CharacterLineageController extends Controller
      * @param  string  $slug
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getLineagePage($id, $isMyo = false)
+    public function getLineagePage($id, $isGeno = false)
     {
-        $this->character = $isMyo ? Character::where('is_myo_slot', 1)->where('id', $id)->first() : Character::where('slug', $id)->first();
+        $this->character = $isGeno ? Character::where('is_geno_slot', 1)->where('id', $id)->first() : Character::where('slug', $id)->first();
         if(!$this->character) abort(404);
 
         $hasLineage = $this->character->lineage !== null;
@@ -70,7 +70,7 @@ class CharacterLineageController extends Controller
             'character' => $this->character,
             'hasLineage' => $hasLineage,
             'lineage' => $line,
-            'isMyo' => $isMyo,
+            'isGeno' => $isGeno,
         ]);
     }
 
@@ -86,12 +86,12 @@ class CharacterLineageController extends Controller
     }
 
     /**
-     * Shows the edit MYO slot lineage modal.
+     * Shows the edit geno slot lineage modal.
      *
      * @param  int  $id
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getEditMyoLineage($id)
+    public function getEditGenoLineage($id)
     {
         return $this->getEditLineage($id, true);
     }
@@ -102,9 +102,9 @@ class CharacterLineageController extends Controller
      * @param  string/int  $id
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getEditLineage($id, $isMyo)
+    public function getEditLineage($id, $isGeno)
     {
-        $this->character = $isMyo ? Character::where('is_myo_slot', 1)->where('id', $id)->first() : Character::where('slug', $id)->first();
+        $this->character = $isGeno ? Character::where('is_geno_slot', 1)->where('id', $id)->first() : Character::where('slug', $id)->first();
         if(!$this->character) abort(404);
 
         $hasLineage = $this->character->lineage !== null;
@@ -112,7 +112,7 @@ class CharacterLineageController extends Controller
         return view('character.admin._edit_lineage_modal', [
             'character' => $this->character,
             'characterOptions' => CharacterLineageBlacklist::getAncestorOptions(),
-            'isMyo' => $isMyo,
+            'isGeno' => $isGeno,
             'hasLineage' => $hasLineage,
             'lineage' => [
                 // there have GOT to be better ways to do this
@@ -162,30 +162,30 @@ class CharacterLineageController extends Controller
     }
 
     /**
-     * Edits an MYO slot's lineage.
+     * Edits an geno slot's lineage.
      *
      * @param  \Illuminate\Http\Request       $request
      * @param  App\Services\CharacterManager  $service
      * @param  int                            $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postEditMyoLineage(Request $request, CharacterManager $service, $id)
+    public function postEditGenoLineage(Request $request, CharacterManager $service, $id)
     {
         return $this->postEditLineage($request, $service, $id, true);
     }
 
 
     /**
-     * Edits an char or myo's lineage.
+     * Edits an char or geno's lineage.
      *
      * @param  \Illuminate\Http\Request       $request
      * @param  App\Services\CharacterManager  $service
      * @param  int                            $id
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function postEditLineage(Request $request, CharacterManager $service, $id, $isMyo)
+    public function postEditLineage(Request $request, CharacterManager $service, $id, $isGeno)
     {
-        $this->character = $isMyo ? Character::where('is_myo_slot', 1)->where('id', $id)->first() : Character::where('slug', $id)->first();
+        $this->character = $isGeno ? Character::where('is_geno_slot', 1)->where('id', $id)->first() : Character::where('slug', $id)->first();
         if(!$this->character) abort(404);
 
         $data = $request->only([

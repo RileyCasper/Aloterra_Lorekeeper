@@ -1,31 +1,31 @@
 @extends('admin.layout')
 
-@section('admin-title') Create {{ $isMyo ? 'MYO Slot' : 'Character' }} @endsection
+@section('admin-title') Create {{ $isGeno ? 'geno Slot' : 'Character' }} @endsection
 
 @section('admin-content')
-{!! breadcrumbs(['Admin Panel' => 'admin', 'Create '.($isMyo ? 'MYO Slot' : 'Character') => 'admin/masterlist/create-'.($isMyo ? 'myo' : 'character')]) !!}
+{!! breadcrumbs(['Admin Panel' => 'admin', 'Create '.($isGeno ? 'geno Slot' : 'Character') => 'admin/masterlist/create-'.($isGeno ? 'geno' : 'character')]) !!}
 
-<h1>Create {{ $isMyo ? 'MYO Slot' : 'Character' }}</h1>
+<h1>Create {{ $isGeno ? 'geno Slot' : 'Character' }}</h1>
 
-@if(!$isMyo && !count($categories))
+@if(!$isGeno && !count($categories))
 
     <div class="alert alert-danger">Creating characters requires at least one <a href="{{ url('admin/data/character-categories') }}">character category</a> to be created first, as character categories are used to generate the character code.</div>
 
 @else
 
-    {!! Form::open(['url' => 'admin/masterlist/create-'.($isMyo ? 'myo' : 'character'), 'files' => true]) !!}
+    {!! Form::open(['url' => 'admin/masterlist/create-'.($isGeno ? 'geno' : 'character'), 'files' => true]) !!}
 
     <h3>Basic Information</h3>
 
-    @if($isMyo)
+    @if($isGeno)
         <div class="form-group">
-            {!! Form::label('Name') !!} {!! add_help('Enter a descriptive name for the type of character this slot can create, e.g. Rare MYO Slot. This will be listed on the MYO slot masterlist.') !!}
+            {!! Form::label('Name') !!} {!! add_help('Enter a descriptive name for the type of character this slot can create, e.g. Rare geno Slot. This will be listed on the geno slot masterlist.') !!}
             {!! Form::text('name', old('name'), ['class' => 'form-control']) !!}
         </div>
     @endif
 
     <div class="alert alert-info">
-        Fill in either of the owner fields - you can select a user from the list if they have registered for the site, or enter the URL of their off-site profile, such as their deviantArt profile, if they don't have an account. If the owner registers an account later and links their account, {{ $isMyo ? 'MYO slot' : 'character' }}s linked to that account's profile will automatically be credited to their site account. If both fields are filled, the URL field will be ignored.
+        Fill in either of the owner fields - you can select a user from the list if they have registered for the site, or enter the URL of their off-site profile, such as their deviantArt profile, if they don't have an account. If the owner registers an account later and links their account, {{ $isGeno ? 'geno slot' : 'character' }}s linked to that account's profile will automatically be credited to their site account. If both fields are filled, the URL field will be ignored.
     </div>
 
     <div class="row">
@@ -43,7 +43,7 @@
         </div>
     </div>
 
-    @if(!$isMyo)
+    @if(!$isGeno)
         <div class="row">
             <div class="col-md-6">
                 <div class="form-group">
@@ -75,8 +75,8 @@
 
     <div class="form-group">
         {!! Form::label('Description (Optional)') !!}
-        @if($isMyo)
-            {!! add_help('This section is for making additional notes about the MYO slot. If there are restrictions for the character that can be created by this slot that cannot be expressed with the options below, use this section to describe them.') !!}
+        @if($isGeno)
+            {!! add_help('This section is for making additional notes about the geno slot. If there are restrictions for the character that can be created by this slot that cannot be expressed with the options below, use this section to describe them.') !!}
         @else
             {!! add_help('This section is for making additional notes about the character and is separate from the character\'s profile (this is not editable by the user).') !!}
         @endif
@@ -85,16 +85,16 @@
 
     <div class="form-group">
         {!! Form::checkbox('is_visible', 1, old('is_visible'), ['class' => 'form-check-input', 'data-toggle' => 'toggle']) !!}
-        {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help('Turn this off to hide the '.($isMyo ? 'MYO slot' : 'character').'. Only mods with the Manage Masterlist power (that\'s you!) can view it - the owner will also not be able to see the '.($isMyo ? 'MYO slot' : 'character').'\'s page.') !!}
+        {!! Form::label('is_visible', 'Is Visible', ['class' => 'form-check-label ml-3']) !!} {!! add_help('Turn this off to hide the '.($isGeno ? 'geno slot' : 'character').'. Only mods with the Manage Masterlist power (that\'s you!) can view it - the owner will also not be able to see the '.($isGeno ? 'geno slot' : 'character').'\'s page.') !!}
     </div>
 
     <h3>Transfer Information</h3>
 
     <div class="alert alert-info">
-        These are displayed on the {{ $isMyo ? 'MYO slot' : 'character' }}'s profile, but don't have any effect on site functionality except for the following:
+        These are displayed on the {{ $isGeno ? 'geno slot' : 'character' }}'s profile, but don't have any effect on site functionality except for the following:
         <ul>
-            <li>If all switches are off, the {{ $isMyo ? 'MYO slot' : 'character' }} cannot be transferred by the user (directly or through trades).</li>
-            <li>If a transfer cooldown is set, the {{ $isMyo ? 'MYO slot' : 'character' }} also cannot be transferred by the user (directly or through trades) until the cooldown is up.</li>
+            <li>If all switches are off, the {{ $isGeno ? 'geno slot' : 'character' }} cannot be transferred by the user (directly or through trades).</li>
+            <li>If a transfer cooldown is set, the {{ $isGeno ? 'geno slot' : 'character' }} also cannot be transferred by the user (directly or through trades) until the cooldown is up.</li>
         </ul>
     </div>
     <div class="form-group">
@@ -111,7 +111,7 @@
     </div>
     <div class="card mb-3" id="resellOptions">
         <div class="card-body">
-            {!! Form::label('Resale Value') !!} {!! add_help('This value is publicly displayed on the '.($isMyo ? 'MYO slot' : 'character').'\'s page.') !!}
+            {!! Form::label('Resale Value') !!} {!! add_help('This value is publicly displayed on the '.($isGeno ? 'geno slot' : 'character').'\'s page.') !!}
             {!! Form::text('sale_value', old('sale_value'), ['class' => 'form-control']) !!}
         </div>
     </div>
@@ -124,8 +124,8 @@
 
     <div class="form-group">
         {!! Form::label('Image') !!}
-        @if($isMyo)
-            {!! add_help('This is a cover image for the MYO slot. If left blank, a default image will be used.') !!}
+        @if($isGeno)
+            {!! add_help('This is a cover image for the geno slot. If left blank, a default image will be used.') !!}
         @else
             {!! add_help('This is the full masterlist image. Note that the image is not protected in any way, so take precautions to avoid art/design theft.') !!}
         @endif
@@ -201,7 +201,7 @@
             <a href="#" class="add-artist btn btn-link mb-2" data-toggle="tooltip" title="Add another artist">+</a>
         </div>
     </div>
-    @if(!$isMyo)
+    @if(!$isGeno)
         <div class="form-group">
             {!! Form::label('Image Notes (Optional)') !!} {!! add_help('This section is for making additional notes about the image.') !!}
             {!! Form::textarea('image_description', old('image_description'), ['class' => 'form-control wysiwyg']) !!}
@@ -295,22 +295,22 @@
     <h3>Traits</h3>
 
     <div class="form-group">
-        {!! Form::label('Species') !!} @if($isMyo) {!! add_help('This will lock the slot into a particular species. Leave it blank if you would like to give the user a choice.') !!} @endif
+        {!! Form::label('Species') !!} @if($isGeno) {!! add_help('This will lock the slot into a particular species. Leave it blank if you would like to give the user a choice.') !!} @endif
         {!! Form::select('species_id', $specieses, old('species_id'), ['class' => 'form-control', 'id' => 'species']) !!}
     </div>
 
     <div class="form-group" id="subtypes">
-        {!! Form::label('Subtype (Optional)') !!} @if($isMyo) {!! add_help('This will lock the slot into a particular subtype. Leave it blank if you would like to give the user a choice, or not select a subtype. The subtype must match the species selected above, and if no species is specified, the subtype will not be applied.') !!} @endif
+        {!! Form::label('Subtype (Optional)') !!} @if($isGeno) {!! add_help('This will lock the slot into a particular subtype. Leave it blank if you would like to give the user a choice, or not select a subtype. The subtype must match the species selected above, and if no species is specified, the subtype will not be applied.') !!} @endif
         {!! Form::select('subtype_id', $subtypes, old('subtype_id'), ['class' => 'form-control disabled', 'id' => 'subtype']) !!}
     </div>
 
     <div class="form-group">
-        {!! Form::label('Character Rarity') !!} @if($isMyo) {!! add_help('This will lock the slot into a particular rarity. Leave it blank if you would like to give the user more choices.') !!} @endif
+        {!! Form::label('Character Rarity') !!} @if($isGeno) {!! add_help('This will lock the slot into a particular rarity. Leave it blank if you would like to give the user more choices.') !!} @endif
         {!! Form::select('rarity_id', $rarities, old('rarity_id'), ['class' => 'form-control']) !!}
     </div>
 
     <div class="form-group">
-        {!! Form::label('Traits') !!} @if($isMyo) {!! add_help('These traits will be listed as required traits for the slot. The user will still be able to add on more traits, but not be able to remove these. This is allowed to conflict with the rarity above; you may add traits above the character\'s specified rarity.') !!} @endif
+        {!! Form::label('Traits') !!} @if($isGeno) {!! add_help('These traits will be listed as required traits for the slot. The user will still be able to add on more traits, but not be able to remove these. This is allowed to conflict with the rarity above; you may add traits above the character\'s specified rarity.') !!} @endif
         <div id="featureList">
         </div>
         <div><a href="#" class="btn btn-primary" id="add-feature">Add Trait</a></div>
@@ -344,16 +344,16 @@
 @parent
 @include('widgets._character_create_options_js')
 @include('widgets._image_upload_js')
-@if(!$isMyo)
+@if(!$isGeno)
     @include('widgets._character_code_js')
 @endif
 
 <script>
     $( "#species" ).change(function() {
       var species = $('#species').val();
-      var myo = '<?php echo($isMyo); ?>';
+      var geno = '<?php echo($isGeno); ?>';
       $.ajax({
-        type: "GET", url: "{{ url('admin/masterlist/check-subtype') }}?species="+species+"&myo="+myo, dataType: "text"
+        type: "GET", url: "{{ url('admin/masterlist/check-subtype') }}?species="+species+"&geno="+geno, dataType: "text"
       }).done(function (res) { $("#subtypes").html(res); }).fail(function (jqXHR, textStatus, errorThrown) { alert("AJAX call failed: " + textStatus + ", " + errorThrown); });
     });
     $(document).ready(function()

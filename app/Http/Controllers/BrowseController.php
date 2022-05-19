@@ -113,7 +113,7 @@ class BrowseController extends Controller
      */
     public function getCharacters(Request $request)
     {
-        $query = Character::with('user.rank')->with('image.features')->with('rarity')->with('image.species')->myo(0);
+        $query = Character::with('user.rank')->with('image.features')->with('rarity')->with('image.species')->geno(0);
         $imageQuery = CharacterImage::images(Auth::check() ? Auth::user() : null)->with('features')->with('rarity')->with('species')->with('features');
 
         if ($sublists = Sublist::where('show_main', 0)->get()) {
@@ -276,7 +276,7 @@ class BrowseController extends Controller
         }
 
         return view('browse.masterlist', [
-            'isMyo'       => false,
+            'isGeno'       => false,
             'characters'  => $query->paginate(24)->appends($request->query()),
             'categories'  => [0 => 'Any Category'] + CharacterCategory::whereNotIn('id', $subCategories)->orderBy('character_categories.sort', 'DESC')->pluck('name', 'id')->toArray(),
             'specieses'   => [0 => 'Any Species'] + Species::whereNotIn('id', $subSpecies)->orderBy('specieses.sort', 'DESC')->pluck('name', 'id')->toArray(),
@@ -289,13 +289,13 @@ class BrowseController extends Controller
     }
 
     /**
-     * Shows the MYO slot masterlist.
+     * Shows the geno slot masterlist.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getMyos(Request $request)
+    public function getGenos(Request $request)
     {
-        $query = Character::with('user.rank')->with('image.features')->with('rarity')->with('image.species')->myo(1);
+        $query = Character::with('user.rank')->with('image.features')->with('rarity')->with('image.species')->geno(1);
 
         $imageQuery = CharacterImage::images(Auth::check() ? Auth::user() : null)->with('features')->with('rarity')->with('species')->with('features');
 
@@ -404,8 +404,8 @@ class BrowseController extends Controller
             $query->visible();
         }
 
-        return view('browse.myo_masterlist', [
-            'isMyo'       => true,
+        return view('browse.geno_masterlist', [
+            'isGeno'       => true,
             'slots'       => $query->paginate(30)->appends($request->query()),
             'specieses'   => [0 => 'Any Species'] + Species::orderBy('specieses.sort', 'DESC')->pluck('name', 'id')->toArray(),
             'rarities'    => [0 => 'Any Rarity'] + Rarity::orderBy('rarities.sort', 'DESC')->pluck('name', 'id')->toArray(),
@@ -424,7 +424,7 @@ class BrowseController extends Controller
      */
     public function getSublist(Request $request, $key)
     {
-        $query = Character::with('user.rank')->with('image.features')->with('rarity')->with('image.species')->myo(0);
+        $query = Character::with('user.rank')->with('image.features')->with('rarity')->with('image.species')->geno(0);
         $imageQuery = CharacterImage::with('features')->with('rarity')->with('species')->with('features');
 
         $sublist = Sublist::where('key', $key)->first();
@@ -596,7 +596,7 @@ class BrowseController extends Controller
         }
 
         return view('browse.sub_masterlist', [
-            'isMyo'       => false,
+            'isGeno'       => false,
             'characters'  => $query->paginate(24)->appends($request->query()),
             'categories'  => [0 => 'Any Category'] + $subCategory,
             'specieses'   => [0 => 'Any Species'] + $subSpecies,

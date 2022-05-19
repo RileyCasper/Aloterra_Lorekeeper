@@ -33,7 +33,7 @@ class DesignUpdateManager extends Service
     */
 
     /**
-     * Creates a character design update request (or a MYO design approval request).
+     * Creates a character design update request (or a geno design approval request).
      *
      * @param \App\Models\Character\Character $character
      * @param \App\Models\User\User           $user
@@ -49,10 +49,10 @@ class DesignUpdateManager extends Service
                 throw new \Exception('You do not own this character.');
             }
             if (CharacterDesignUpdate::where('character_id', $character->id)->active()->exists()) {
-                throw new \Exception('This '.($character->is_myo_slot ? 'MYO slot' : 'character').' already has an existing request. Please update that one, or delete it before creating a new one.');
+                throw new \Exception('This '.($character->is_geno_slot ? 'geno slot' : 'character').' already has an existing request. Please update that one, or delete it before creating a new one.');
             }
             if (!$character->isAvailable) {
-                throw new \Exception('This '.($character->is_myo_slot ? 'MYO slot' : 'character').' is currently in an open trade or transfer. Please cancel the trade or transfer before creating a design update.');
+                throw new \Exception('This '.($character->is_geno_slot ? 'geno slot' : 'character').' is currently in an open trade or transfer. Please cancel the trade or transfer before creating a design update.');
             }
 
             $data = [
@@ -61,7 +61,7 @@ class DesignUpdateManager extends Service
                 'status'        => 'Draft',
                 'hash'          => randomString(10),
                 'fullsize_hash' => randomString(15),
-                'update_type'   => $character->is_myo_slot ? 'MYO' : 'Character',
+                'update_type'   => $character->is_geno_slot ? 'geno' : 'Character',
 
                 // Set some data based on the character's existing stats
                 'rarity_id'  => $character->image->rarity_id,
@@ -71,11 +71,11 @@ class DesignUpdateManager extends Service
 
             $request = CharacterDesignUpdate::create($data);
 
-            // If the character is not a MYO slot, make a copy of the previous image's traits
+            // If the character is not a geno slot, make a copy of the previous image's traits
             // as presumably, we will not want to make major modifications to them.
-            // This is skipped for MYO slots as it complicates things later on - we don't want
+            // This is skipped for geno slots as it complicates things later on - we don't want
             // users to edit compulsory traits, so we'll only add them when the design is approved.
-            if (!$character->is_myo_slot) {
+            if (!$character->is_geno_slot) {
                 foreach ($character->image->features as $feature) {
                     $request->features()->create([
                         'character_image_id' => $request->id,
@@ -361,17 +361,17 @@ class DesignUpdateManager extends Service
         DB::beginTransaction();
 
         try {
-            if (!($request->character->is_myo_slot && $request->character->image->species_id) && !isset($data['species_id'])) {
+            if (!($request->character->is_geno_slot && $request->character->image->species_id) && !isset($data['species_id'])) {
                 throw new \Exception('Please select a species.');
             }
-            if (!($request->character->is_myo_slot && $request->character->image->rarity_id) && !isset($data['rarity_id'])) {
+            if (!($request->character->is_geno_slot && $request->character->image->rarity_id) && !isset($data['rarity_id'])) {
                 throw new \Exception('Please select a rarity.');
             }
 
-            $rarity = ($request->character->is_myo_slot && $request->character->image->rarity_id) ? $request->character->image->rarity : Rarity::find($data['rarity_id']);
-            $species = ($request->character->is_myo_slot && $request->character->image->species_id) ? $request->character->image->species : Species::find($data['species_id']);
+            $rarity = ($request->character->is_geno_slot && $request->character->image->rarity_id) ? $request->character->image->rarity : Rarity::find($data['rarity_id']);
+            $species = ($request->character->is_geno_slot && $request->character->image->species_id) ? $request->character->image->species : Species::find($data['species_id']);
             if (isset($data['subtype_id']) && $data['subtype_id']) {
-                $subtype = ($request->character->is_myo_slot && $request->character->image->subtype_id) ? $request->character->image->subtype : Subtype::find($data['subtype_id']);
+                $subtype = ($request->character->is_geno_slot && $request->character->image->subtype_id) ? $request->character->image->subtype : Subtype::find($data['subtype_id']);
             } else {
                 $subtype = null;
             }
@@ -442,8 +442,8 @@ class DesignUpdateManager extends Service
             }
 
             // Recheck and set update type, as insurance/in case of pre-existing drafts
-            if ($request->character->is_myo_slot) {
-                $request->update_type = 'MYO';
+            if ($request->character->is_geno_slot) {
+                $request->update_type = 'geno';
             } else {
                 $request->update_type = 'Character';
             }
@@ -517,7 +517,7 @@ class DesignUpdateManager extends Service
                 foreach ($stacks as $stackId=>$quantity) {
                     $stack = UserItem::find($stackId);
                     $user = User::find($request->user_id);
-                    if (!$inventoryManager->debitStack($user, $request->character->is_myo_slot ? 'MYO Design Approved' : 'Character Design Updated', ['data' => 'Item used in '.($request->character->is_myo_slot ? 'MYO design approval' : 'Character design update').' (<a href="'.$request->url.'">#'.$request->id.'</a>)'], $stack, $quantity)) {
+                    if (!$inventoryManager->debitStack($user, $request->character->is_geno_slot ? 'geno Design Approved' : 'Character Design Updated', ['data' => 'Item used in '.($request->character->is_geno_slot ? 'geno design approval' : 'Character design update').' (<a href="'.$request->url.'">#'.$request->id.'</a>)'], $stack, $quantity)) {
                         throw new \Exception('Failed to create log for item stack.');
                     }
                 }
@@ -532,8 +532,8 @@ class DesignUpdateManager extends Service
                         'User',
                         null,
                         null,
-                        $request->character->is_myo_slot ? 'MYO Design Approved' : 'Character Design Updated',
-                        'Used in '.($request->character->is_myo_slot ? 'MYO design approval' : 'character design update').' (<a href="'.$request->url.'">#'.$request->id.'</a>)',
+                        $request->character->is_geno_slot ? 'geno Design Approved' : 'Character Design Updated',
+                        'Used in '.($request->character->is_geno_slot ? 'geno design approval' : 'character design update').' (<a href="'.$request->url.'">#'.$request->id.'</a>)',
                         $currencyId,
                         $quantity
                     )) {
@@ -549,8 +549,8 @@ class DesignUpdateManager extends Service
                         'Character',
                         null,
                         null,
-                        $request->character->is_myo_slot ? 'MYO Design Approved' : 'Character Design Updated',
-                        'Used in '.($request->character->is_myo_slot ? 'MYO design approval' : 'character design update').' (<a href="'.$request->url.'">#'.$request->id.'</a>)',
+                        $request->character->is_geno_slot ? 'geno Design Approved' : 'Character Design Updated',
+                        'Used in '.($request->character->is_geno_slot ? 'geno design approval' : 'character design update').' (<a href="'.$request->url.'">#'.$request->id.'</a>)',
                         $currencyId,
                         $quantity
                     )) {
@@ -574,7 +574,7 @@ class DesignUpdateManager extends Service
                 'y0'            => $request->y0,
                 'y1'            => $request->y1,
                 'species_id'    => $request->species_id,
-                'subtype_id'    => ($request->character->is_myo_slot && isset($request->character->image->subtype_id)) ? $request->character->image->subtype_id : $request->subtype_id,
+                'subtype_id'    => ($request->character->is_geno_slot && isset($request->character->image->subtype_id)) ? $request->character->image->subtype_id : $request->subtype_id,
                 'rarity_id'     => $request->rarity_id,
                 'sort'          => 0,
             ]);
@@ -584,7 +584,7 @@ class DesignUpdateManager extends Service
             $request->artists()->update(['character_type' => 'Character', 'character_image_id' => $image->id]);
 
             // Add the compulsory features
-            if ($request->character->is_myo_slot) {
+            if ($request->character->is_geno_slot) {
                 foreach ($request->character->image->features as $feature) {
                     CharacterFeature::create(['character_image_id' => $image->id, 'feature_id' => $feature->feature_id, 'data' => $feature->data, 'character_type' => 'Character']);
                 }
@@ -637,12 +637,12 @@ class DesignUpdateManager extends Service
             }
 
             // Note old image to delete it
-            if (Config::get('lorekeeper.extensions.remove_myo_image') && $request->character->is_myo_slot && $data['remove_myo_image'] == 2) {
+            if (Config::get('lorekeeper.extensions.remove_geno_image') && $request->character->is_geno_slot && $data['remove_geno_image'] == 2) {
                 $oldImage = $request->character->image;
             }
 
-            // Hide the MYO placeholder image if desired
-            if (Config::get('lorekeeper.extensions.remove_myo_image') && $request->character->is_myo_slot && $data['remove_myo_image'] == 1) {
+            // Hide the geno placeholder image if desired
+            if (Config::get('lorekeeper.extensions.remove_geno_image') && $request->character->is_geno_slot && $data['remove_geno_image'] == 1) {
                 $request->character->image->is_visible = 0;
                 $request->character->image->save();
             }
@@ -653,35 +653,35 @@ class DesignUpdateManager extends Service
             }
 
             // Final recheck and setting of update type, as insurance
-            if ($request->character->is_myo_slot) {
-                $request->update_type = 'MYO';
+            if ($request->character->is_geno_slot) {
+                $request->update_type = 'geno';
             } else {
                 $request->update_type = 'Character';
             }
             $request->save();
 
             // Add a log for the character and user
-            (new CharacterManager)->createLog($user->id, null, $request->character->user_id, $request->character->user->url, $request->character->id, $request->update_type == 'MYO' ? 'MYO Design Approved' : 'Character Design Updated', '[#'.$image->id.']', 'character');
-            (new CharacterManager)->createLog($user->id, null, $request->character->user_id, $request->character->user->url, $request->character->id, $request->update_type == 'MYO' ? 'MYO Design Approved' : 'Character Design Updated', '[#'.$image->id.']', 'user');
+            (new CharacterManager)->createLog($user->id, null, $request->character->user_id, $request->character->user->url, $request->character->id, $request->update_type == 'geno' ? 'geno Design Approved' : 'Character Design Updated', '[#'.$image->id.']', 'character');
+            (new CharacterManager)->createLog($user->id, null, $request->character->user_id, $request->character->user->url, $request->character->id, $request->update_type == 'geno' ? 'geno Design Approved' : 'Character Design Updated', '[#'.$image->id.']', 'user');
 
-            // If this is for a MYO, set user's FTO status and the MYO status of the slot
+            // If this is for a geno, set user's FTO status and the geno status of the slot
             // and clear the character's name
-            if ($request->character->is_myo_slot) {
-                if (Config::get('lorekeeper.settings.clear_myo_slot_name_on_approval')) {
+            if ($request->character->is_geno_slot) {
+                if (Config::get('lorekeeper.settings.clear_geno_slot_name_on_approval')) {
                     $request->character->name = null;
                 }
-                $request->character->is_myo_slot = 0;
+                $request->character->is_geno_slot = 0;
                 $request->user->settings->is_fto = 0;
                 $request->user->settings->save();
 
-                // Delete the MYO placeholder image if desired
-                if (Config::get('lorekeeper.extensions.remove_myo_image') && $data['remove_myo_image'] == 2) {
+                // Delete the geno placeholder image if desired
+                if (Config::get('lorekeeper.extensions.remove_geno_image') && $data['remove_geno_image'] == 2) {
                     $characterManager = new CharacterManager;
                     if (!$characterManager->deleteImage($oldImage, $user, true)) {
                         foreach ($characterManager->errors()->getMessages()['error'] as $error) {
                             flash($error)->error();
                         }
-                        throw new \Exception('Failed to delete MYO image.');
+                        throw new \Exception('Failed to delete geno image.');
                     }
                 }
             }

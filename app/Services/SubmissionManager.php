@@ -73,7 +73,7 @@ class SubmissionManager extends Service
             // We'll need to match characters to the rewards for them.
             // First, check if the characters are accessible to begin with.
             if (isset($data['slug'])) {
-                $characters = Character::myo(0)->visible()->whereIn('slug', $data['slug'])->get();
+                $characters = Character::geno(0)->visible()->whereIn('slug', $data['slug'])->get();
                 if (count($characters) != count($data['slug'])) {
                     throw new \Exception('One or more of the selected characters do not exist.');
                 }
@@ -476,7 +476,7 @@ class SubmissionManager extends Service
             // We'll need to match characters to the rewards for them.
             // First, check if the characters are accessible to begin with.
             if (isset($data['slug'])) {
-                $characters = Character::myo(0)->visible()->whereIn('slug', $data['slug'])->get();
+                $characters = Character::geno(0)->visible()->whereIn('slug', $data['slug'])->get();
                 if (count($characters) != count($data['slug'])) {
                     throw new \Exception('One or more of the selected characters do not exist.');
                 }

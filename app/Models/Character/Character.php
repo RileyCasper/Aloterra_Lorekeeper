@@ -54,7 +54,7 @@ class Character extends Model
         'is_sellable', 'is_tradeable', 'is_giftable',
         'sale_value', 'transferrable_at', 'is_visible',
         'is_gift_art_allowed', 'is_gift_writing_allowed', 'is_trading', 'sort',
-        'is_myo_slot', 'name', 'trade_id', 'owner_url', 'class_id', 'home_id', 'home_changed', 'faction_id', 'faction_changed'
+        'is_geno_slot', 'name', 'trade_id', 'owner_url', 'class_id', 'home_id', 'home_changed', 'faction_id', 'faction_changed'
     ];
 
     /**
@@ -117,11 +117,11 @@ class Character extends Model
     ];
 
     /**
-     * Validation rules for MYO slots.
+     * Validation rules for geno slots.
      *
      * @var array
      */
-    public static $myoRules = [
+    public static $genoRules = [
         'rarity_id'   => 'nullable',
         'user_id'     => 'nullable',
         'number'      => 'nullable',
@@ -307,16 +307,16 @@ class Character extends Model
     **********************************************************************************************/
 
     /**
-     * Scope a query to only include either characters of MYO slots.
+     * Scope a query to only include either characters of geno slots.
      *
      * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param bool                                  $isMyo
+     * @param bool                                  $isGeno
      *
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeMyo($query, $isMyo = false)
+    public function scopeGeno($query, $isGeno = false)
     {
-        return $query->where('is_myo_slot', $isMyo);
+        return $query->where('is_geno_slot', $isGeno);
     }
 
     /**
@@ -402,13 +402,13 @@ class Character extends Model
 
     /**
      * Gets the character's code.
-     * If this is a MYO slot, it will return the MYO slot's name.
+     * If this is a geno slot, it will return the geno slot's name.
      *
      * @return string
      */
     public function getSlugAttribute()
     {
-        if ($this->is_myo_slot) {
+        if ($this->is_geno_slot) {
             return $this->name;
         } else {
             return $this->attributes['slug'];
@@ -427,13 +427,13 @@ class Character extends Model
 
     /**
      * Gets the character's name, including their code and user-assigned name.
-     * If this is a MYO slot, simply returns the slot's name.
+     * If this is a geno slot, simply returns the slot's name.
      *
      * @return string
      */
     public function getFullNameAttribute()
     {
-        if ($this->is_myo_slot) {
+        if ($this->is_geno_slot) {
             return $this->name;
         } else {
             return $this->slug.($this->name ? ': '.$this->name : '');
@@ -447,8 +447,8 @@ class Character extends Model
      */
     public function getUrlAttribute()
     {
-        if ($this->is_myo_slot) {
-            return url('myo/'.$this->id);
+        if ($this->is_geno_slot) {
+            return url('geno/'.$this->id);
         } else {
             return url('character/'.$this->slug);
         }

@@ -21,7 +21,7 @@
 </div>
 
 <div class="form-group">
-    {!! Form::label('Code') !!} {!! add_help('This is used in generating the codename for the character. Choose a short unique identifier, e.g. MYO, GUEST, etc.') !!}
+    {!! Form::label('Code') !!} {!! add_help('This is used in generating the codename for the character. Choose a short unique identifier, e.g. geno, GUEST, etc.') !!}
     {!! Form::text('code', $category->code, ['class' => 'form-control']) !!}
 </div>
 

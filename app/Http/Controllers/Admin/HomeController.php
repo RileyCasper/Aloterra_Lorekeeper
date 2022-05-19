@@ -34,7 +34,7 @@ class HomeController extends Controller
             'submissionCount'        => Submission::where('status', 'Pending')->whereNotNull('prompt_id')->count(),
             'claimCount'             => Submission::where('status', 'Pending')->whereNull('prompt_id')->count(),
             'designCount'            => CharacterDesignUpdate::characters()->where('status', 'Pending')->count(),
-            'myoCount'               => CharacterDesignUpdate::myos()->where('status', 'Pending')->count(),
+            'genoCount'               => CharacterDesignUpdate::genos()->where('status', 'Pending')->count(),
             'reportCount'            => Report::where('status', 'Pending')->count(),
             'assignedReportCount'    => Report::assignedToMe(Auth::user())->count(),
             'openTransfersQueue'     => $openTransfersQueue,

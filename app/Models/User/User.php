@@ -154,7 +154,7 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
     /**
-     * Get all the user's characters, regardless of whether they are full characters of myo slots.
+     * Get all the user's characters, regardless of whether they are full characters of geno slots.
      */
     public function allCharacters()
     {
@@ -166,15 +166,15 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     public function characters()
     {
-        return $this->hasMany('App\Models\Character\Character')->where('is_myo_slot', 0)->orderBy('sort', 'DESC');
+        return $this->hasMany('App\Models\Character\Character')->where('is_geno_slot', 0)->orderBy('sort', 'DESC');
     }
 
     /**
-     * Get the user's MYO slots.
+     * Get the user's geno slots.
      */
-    public function myoSlots()
+    public function genoSlots()
     {
-        return $this->hasMany('App\Models\Character\Character')->where('is_myo_slot', 1)->orderBy('id', 'DESC');
+        return $this->hasMany('App\Models\Character\Character')->where('is_geno_slot', 1)->orderBy('id', 'DESC');
     }
 
     /**
@@ -843,7 +843,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $user = $this;
         $query = UserCharacterLog::with('sender.rank')->with('recipient.rank')->with('character')->where(function ($query) use ($user) {
-            $query->where('sender_id', $user->id)->whereNotIn('log_type', ['Character Created', 'MYO Slot Created', 'Character Design Updated', 'MYO Design Approved']);
+            $query->where('sender_id', $user->id)->whereNotIn('log_type', ['Character Created', 'geno Slot Created', 'Character Design Updated', 'geno Design Approved']);
         })->orWhere(function ($query) use ($user) {
             $query->where('recipient_id', $user->id);
         })->orderBy('id', 'DESC');

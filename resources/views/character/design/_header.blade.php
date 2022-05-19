@@ -22,7 +22,7 @@
         }
     ?>
     <div class="card mb-3"><div class="card-body">
-        <h5 class="text-left">{{$request->status == 'Pending' ? 'Vote' : 'Past Votes'}} on this {{ $request->update_type == 'MYO' ? 'MYO Submission' : 'Design Update' }}
+        <h5 class="text-left">{{$request->status == 'Pending' ? 'Vote' : 'Past Votes'}} on this {{ $request->update_type == 'geno' ? 'geno Submission' : 'Design Update' }}
         @if($request->status == 'Pending')
             <span class="text-right float-right">
                 <div class="row">
@@ -43,7 +43,7 @@
         @endif
         </h5>
             <p>
-                {{ $request->update_type == 'MYO' ? 'MYO Submissions' : 'Design updates' }} need {{ Settings::get('design_votes_needed') }} votes before they are considered approved. Note that this does not automatically process the submission in any case, only indicate a consensus.
+                {{ $request->update_type == 'geno' ? 'geno Submissions' : 'Design updates' }} need {{ Settings::get('design_votes_needed') }} votes before they are considered approved. Note that this does not automatically process the submission in any case, only indicate a consensus.
             </p>
         <hr/>
         @if(isset($request->vote_data) && $request->vote_data)

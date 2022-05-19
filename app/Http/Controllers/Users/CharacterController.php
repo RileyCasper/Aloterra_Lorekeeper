@@ -50,15 +50,15 @@ class CharacterController extends Controller
     }
 
     /**
-     * Shows the user's MYO slots.
+     * Shows the user's geno slots.
      *
      * @return \Illuminate\Contracts\Support\Renderable
      */
-    public function getMyos()
+    public function getGenos()
     {
-        $slots = Auth::user()->myoSlots()->with('image')->get();
+        $slots = Auth::user()->genoSlots()->with('image')->get();
 
-        return view('home.myos', [
+        return view('home.genos', [
             'slots' => $slots,
         ]);
     }

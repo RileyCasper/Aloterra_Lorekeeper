@@ -64,16 +64,16 @@
       <div class="col-sm-6">
           <div class="card mb-3">
               <div class="card-body">
-                  <h5 class="card-title">MYO Approvals @if($myoCount)<span class="badge badge-primary">{{ $myoCount }}</span>@endif</h5>
+                  <h5 class="card-title">geno Approvals @if($genoCount)<span class="badge badge-primary">{{ $genoCount }}</span>@endif</h5>
                   <p class="card-text">
-                      @if($myoCount)
-                          {{ $myoCount }} MYO slot{{ $myoCount == 1 ? '' : 's' }} awaiting processing.
+                      @if($genoCount)
+                          {{ $genoCount }} geno slot{{ $genoCount == 1 ? '' : 's' }} awaiting processing.
                       @else
-                          The MYO slot approval queue is clear. Hooray!
+                          The geno slot approval queue is clear. Hooray!
                       @endif
                   </p>
                   <div class="text-right">
-                      <a href="{{ url('admin/myo-approvals/pending') }}" class="card-link">View Queue <span class="fas fa-caret-right ml-1"></span></a>
+                      <a href="{{ url('admin/geno-approvals/pending') }}" class="card-link">View Queue <span class="fas fa-caret-right ml-1"></span></a>
                   </div>
               </div>
           </div>

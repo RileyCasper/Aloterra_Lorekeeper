@@ -34,8 +34,8 @@
                             <a class="dropdown-item" href="{{ url('characters') }}">
                                 My Characters
                             </a>
-                            <a class="dropdown-item" href="{{ url('characters/myos') }}">
-                                My MYO Slots
+                            <a class="dropdown-item" href="{{ url('characters/genos') }}">
+                                My geno Slots
                             </a>
                             <a class="dropdown-item" href="{{ url('breeding-permissions') }}">
                                 Breeding Permissions
@@ -94,8 +94,8 @@
                         <a class="dropdown-item" href="{{ url('masterlist') }}">
                             Character Masterlist
                         </a>
-                        <a class="dropdown-item" href="{{ url('myos') }}">
-                            MYO Slot Masterlist
+                        <a class="dropdown-item" href="{{ url('genos') }}">
+                            geno Slot Masterlist
                         </a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="{{ url('raffles') }}">

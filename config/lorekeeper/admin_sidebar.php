@@ -132,8 +132,8 @@ return [
                 'url'  => 'admin/masterlist/create-character',
             ],
             [
-                'name' => 'Create MYO Slot',
-                'url'  => 'admin/masterlist/create-myo',
+                'name' => 'Create geno Slot',
+                'url'  => 'admin/masterlist/create-geno',
             ],
             [
                 'name' => 'Character Transfers',
@@ -148,8 +148,8 @@ return [
                 'url'  => 'admin/design-approvals/pending',
             ],
             [
-                'name' => 'MYO Approvals',
-                'url'  => 'admin/myo-approvals/pending',
+                'name' => 'geno Approvals',
+                'url'  => 'admin/geno-approvals/pending',
             ],
         ],
     ],

@@ -22,15 +22,15 @@ class DesignController extends Controller
     public function getDesignIndex(Request $request, $type, $status)
     {
         $requests = CharacterDesignUpdate::where('status', ucfirst($status));
-        if ($type == 'myo-approvals') {
-            $requests = $requests->myos();
+        if ($type == 'geno-approvals') {
+            $requests = $requests->genos();
         } else {
             $requests = $requests->characters();
         }
 
         return view('admin.designs.index', [
             'requests' => $requests->paginate(30)->appends($request->query()),
-            'isMyo'    => ($type == 'myo-approvals'),
+            'isGeno'    => ($type == 'geno-approvals'),
         ]);
     }
 
@@ -65,7 +65,7 @@ class DesignController extends Controller
         } elseif ($action == 'approve' && $service->approveRequest($request->only([
                 'character_category_id', 'number', 'slug', 'description',
                 'is_giftable', 'is_tradeable', 'is_sellable', 'sale_value',
-                'transferrable_at', 'set_active', 'invalidate_old', 'remove_myo_image',
+                'transferrable_at', 'set_active', 'invalidate_old', 'remove_geno_image',
             ]), $r, Auth::user())) {
             flash('Request approved successfully.')->success();
         } elseif ($action == 'reject' && $service->rejectRequest($request->only(['staff_comments']), $r, Auth::user())) {

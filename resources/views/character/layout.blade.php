@@ -3,7 +3,7 @@
 @section('title') Character ::@yield('profile-title')@endsection
 
 @section('sidebar')
-    @include('character.'.($isMyo ? 'myo.' : '').'_sidebar')
+    @include('character.'.($isGeno ? 'geno.' : '').'_sidebar')
 @endsection
 
 @section('content')

@@ -1,12 +1,12 @@
-@extends('character.layout', ['isMyo' => $character->is_myo_slot])
+@extends('character.layout', ['isGeno' => $character->is_geno_slot])
 
 @section('profile-title') {{ $character->fullName }}'s Profile @endsection
 
 @section('meta-img') {{ $character->image->thumbnailUrl }} @endsection
 
 @section('profile-content')
-@if($character->is_myo_slot)
-{!! breadcrumbs(['MYO Slot Masterlist' => 'myos', $character->fullName => $character->url, 'Profile' => $character->url . '/profile']) !!}
+@if($character->is_geno_slot)
+{!! breadcrumbs(['geno Slot Masterlist' => 'genos', $character->fullName => $character->url, 'Profile' => $character->url . '/profile']) !!}
 @else
 {!! breadcrumbs([($character->category->masterlist_sub_id ? $character->category->sublist->name.' Masterlist' : 'Character masterlist') => ($character->category->masterlist_sub_id ? 'sublist/'.$character->category->sublist->key : 'masterlist' ), $character->fullName => $character->url, 'Profile' => $character->url . '/profile']) !!}
 @endif
@@ -42,10 +42,10 @@
 @if($character->is_trading || $character->is_gift_art_allowed || $character->is_gift_writing_allowed)
     <div class="card mb-3">
         <ul class="list-group list-group-flush">
-            @if($character->is_gift_art_allowed >= 1 && !$character->is_myo_slot)
+            @if($character->is_gift_art_allowed >= 1 && !$character->is_geno_slot)
                 <li class="list-group-item"><h5 class="mb-0"><i class="{{ $character->is_gift_art_allowed == 1 ? 'text-success' : 'text-secondary' }} far fa-circle fa-fw mr-2"></i> {{ $character->is_gift_art_allowed == 1 ? 'Gift art is allowed' : 'Please ask before gift art' }}</h5></li>
             @endif
-            @if($character->is_gift_writing_allowed >= 1 && !$character->is_myo_slot)
+            @if($character->is_gift_writing_allowed >= 1 && !$character->is_geno_slot)
                 <li class="list-group-item"><h5 class="mb-0"><i class="{{ $character->is_gift_writing_allowed == 1 ? 'text-success' : 'text-secondary' }} far fa-circle fa-fw mr-2"></i> {{ $character->is_gift_writing_allowed == 1 ? 'Gift writing is allowed' : 'Please ask before gift writing' }}</h5></li>
             @endif
             @if($character->is_trading)

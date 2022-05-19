@@ -1,12 +1,12 @@
-@extends('character.layout', ['isMyo' => $character->is_myo_slot])
+@extends('character.layout', ['isGeno' => $character->is_geno_slot])
 
 @section('profile-title') Transferring {{ $character->fullName }} @endsection
 
 @section('meta-img') {{ $character->image->thumbnailUrl }} @endsection
 
 @section('profile-content')
-@if($character->is_myo_slot)
-{!! breadcrumbs(['MYO Slot Masterlist' => 'myos', $character->fullName => $character->url, 'Transfer' => $character->url . '/transfer']) !!}
+@if($character->is_geno_slot)
+{!! breadcrumbs(['geno Slot Masterlist' => 'genos', $character->fullName => $character->url, 'Transfer' => $character->url . '/transfer']) !!}
 @else
 {!! breadcrumbs([($character->category->masterlist_sub_id ? $character->category->sublist->name.' Masterlist' : 'Character masterlist') => ($character->category->masterlist_sub_id ? 'sublist/'.$character->category->sublist->key : 'masterlist' ), $character->fullName => $character->url, 'Transfer' => $character->url . '/transfer']) !!}
 @endif
@@ -69,7 +69,7 @@
     </div>
     <p>This will transfer the character automatically, without requiring the recipient to confirm the transfer. You may also transfer a character that is marked non-transferrable, or still under cooldown. Both the old and new owners will be notified of the transfer.</p>
     <p>Fill in either of the recipient fields - if transferring to an off-site user, leave the recipient field blank and vice versa.</p>
-    {!! Form::open(['url' => $character->is_myo_slot ? 'admin/myo/'.$character->id.'/transfer' : 'admin/character/' . $character->slug . '/transfer']) !!}
+    {!! Form::open(['url' => $character->is_geno_slot ? 'admin/geno/'.$character->id.'/transfer' : 'admin/character/' . $character->slug . '/transfer']) !!}
     <div class="form-group">
         {!! Form::label('recipient_id', 'Recipient') !!}
         {!! Form::select('recipient_id', $userOptions, old('recipient_id'), ['class' => 'form-control selectize', 'placeholder' => 'Select User']) !!}

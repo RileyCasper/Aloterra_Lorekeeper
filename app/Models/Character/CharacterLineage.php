@@ -235,7 +235,7 @@ class CharacterLineage extends Model
                 $query->whereNull('subtype_id')
                       ->orWhereNotIn('subtype_id', CharacterLineageBlacklist::getBlacklistSubtypes(true));
             })
-            ->orderBy('is_myo_slot', 'asc');
+            ->orderBy('is_geno_slot', 'asc');
     }
 
     /**
@@ -253,7 +253,7 @@ class CharacterLineage extends Model
         if(!Auth::check() || !(Auth::check() && Auth::user()->hasPower('manage_characters'))) $children->where('is_visible', true);
 
         // Sort, limit and return.
-        $children->orderBy('is_myo_slot', 'asc')->orderBy('id', 'desc');
+        $children->orderBy('is_geno_slot', 'asc')->orderBy('id', 'desc');
         if($limit) $children->limit(4);
         return $children->get();
     }

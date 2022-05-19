@@ -43,7 +43,7 @@
         <a href="http://wiki.lorekeeper.me/index.php?title=Extensions:Masterlist_Sublists"><strong>Masterlist Sublists</strong></a> by <a href="https://github.com/junijwi">Junijwi</a>
     </p>
     <p class="mb-0 col-md-4">
-        <a href="http://wiki.lorekeeper.me/index.php?title=Extensions:MYO_Item_Tag"><strong>MYO Item Tag</strong></a> by <a href="https://github.com/junijwi">Junijwi</a>
+        <a href="http://wiki.lorekeeper.me/index.php?title=Extensions:geno_Item_Tag"><strong>geno Item Tag</strong></a> by <a href="https://github.com/junijwi">Junijwi</a>
     </p>
     <p class="mb-0 col-md-4">
         <a href="http://wiki.lorekeeper.me/index.php?title=Extensions:User_Transfer_Reasons"><strong>User Transfer Reasons</strong></a> by <a href="https://github.com/snupsplus">Snupsplus</a>
@@ -82,7 +82,7 @@
         <strong>Character Rewards</strong> by <a href="https://github.com/preimpression">Preimpression</a> ({{ Config::get('lorekeeper.extensions.character_reward_expansion.expanded') ? 'Enabled' : 'Disabled' }}/{{ Config::get('lorekeeper.extensions.character_reward_expansion.default_recipient') ? 'Submitter' : 'Character Owner' }})
     </p>
     <p class="mb-0 col-md-4">
-        <strong>MYO Image Removal</strong> by <a href="https://github.com/itinerare">itinerare</a> ({{ Config::get('lorekeeper.extensions.remove_myo_image') ? 'Enabled' : 'Disabled' }})
+        <strong>geno Image Removal</strong> by <a href="https://github.com/itinerare">itinerare</a> ({{ Config::get('lorekeeper.extensions.remove_geno_image') ? 'Enabled' : 'Disabled' }})
     </p>
     <p class="mb-0 col-md-4">
         <strong>Auto-populate New Image Traits</strong> by <a href="https://github.com/itinerare">itinerare</a> ({{ Config::get('lorekeeper.extensions.autopopulate_image_features') ? 'Enabled' : 'Disabled' }})

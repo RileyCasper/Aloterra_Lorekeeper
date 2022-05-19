@@ -62,8 +62,8 @@ return [
     /       {year}: This is replaced by the current year.
     |
     |       e.g. Under the default setting ({category}-{number}),
-    |       a character in a category called "MYO" (code "MYO") with number 001
-    |       will have the character code of MYO-001.
+    |       a character in a category called "geno" (code "geno") with number 001
+    |       will have the character code of geno-001.
     |
     |       !IMPORTANT!
     |       As this is used to generate the character's URL, sticking to
@@ -83,12 +83,12 @@ return [
     |
     |       e.g. if the following characters exist:
     |       Standard (STD) category: STD-001, STD-002, STD-003
-    |       MYO (MYO) category:      MYO-001, MYO-002
+    |       geno (geno) category:      geno-001, geno-002
     |       If character_pull_number is 'all':
     |           The next number pulled will be 004 regardless of category.
     |       If character_pull_number is 'category':
     |           The next number pulled for STD will be 004.
-    |           The next number pulled for MYO will be 003.
+    |           The next number pulled for geno will be 003.
     |
     | reset_character_status_on_transfer:
     |       This determines whether owner-set character status--
@@ -101,8 +101,8 @@ return [
     |       when the character is transferred to a new owner.
     |       Default: 0/Disabled, 1 to enable.
     |
-    | clear_myo_slot_name_on_approval:
-    |       Whether the "name" given to a MYO slot should be cleared when a design update for it is approved/
+    | clear_geno_slot_name_on_approval:
+    |       Whether the "name" given to a geno slot should be cleared when a design update for it is approved/
     |       the slot becomes a full character.
     |       Default: 0/Disabled, 1 to enable.
     |
@@ -113,7 +113,7 @@ return [
 
     'reset_character_status_on_transfer'  => 0,
     'reset_character_profile_on_transfer' => 0,
-    'clear_myo_slot_name_on_approval'     => 0,
+    'clear_geno_slot_name_on_approval'     => 0,
 
     /*
     |--------------------------------------------------------------------------

@@ -60,7 +60,7 @@ class CharacterManager extends Service
         // First check if the number needs to be the overall next
         // or next in category, and retrieve the highest number
         if (Config::get('lorekeeper.settings.character_pull_number') == 'all') {
-            $character = Character::myo(0)->orderBy('number', 'DESC')->first();
+            $character = Character::geno(0)->orderBy('number', 'DESC')->first();
             if ($character) {
                 $number = ltrim($character->number, 0);
             }
@@ -68,7 +68,7 @@ class CharacterManager extends Service
                 $number = '0';
             }
         } elseif (Config::get('lorekeeper.settings.character_pull_number') == 'category' && $categoryId) {
-            $character = Character::myo(0)->where('character_category_id', $categoryId)->orderBy('number', 'DESC')->first();
+            $character = Character::geno(0)->where('character_category_id', $categoryId)->orderBy('number', 'DESC')->first();
             if ($character) {
                 $number = ltrim($character->number, 0);
             }
@@ -83,27 +83,27 @@ class CharacterManager extends Service
     }
 
     /**
-     * Creates a new character or MYO slot.
+     * Creates a new character or geno slot.
      *
      * @param array                 $data
      * @param \App\Models\User\User $user
-     * @param bool                  $isMyo
+     * @param bool                  $isGeno
      *
      * @return \App\Models\Character\Character|bool
      */
-    public function createCharacter($data, $user, $isMyo = false)
+    public function createCharacter($data, $user, $isGeno = false)
     {
         DB::beginTransaction();
 
         try {
-            if (!$isMyo && Character::where('slug', $data['slug'])->exists()) {
+            if (!$isGeno && Character::where('slug', $data['slug'])->exists()) {
                 throw new \Exception('Please enter a unique character code.');
             }
 
             if (!(isset($data['user_id']) && $data['user_id']) && !(isset($data['owner_url']) && $data['owner_url'])) {
                 throw new \Exception('Please select an owner.');
             }
-            if (!$isMyo) {
+            if (!$isGeno) {
                 if (!(isset($data['species_id']) && $data['species_id'])) {
                     throw new \Exception('Characters require a species.');
                 }
@@ -140,17 +140,17 @@ class CharacterManager extends Service
             }
 
             // Create character
-            $character = $this->handleCharacter($data, $isMyo);
+            $character = $this->handleCharacter($data, $isGeno);
             if (!$character) {
                 throw new \Exception('Error happened while trying to create character.');
             }
 
             // Create character lineage
-            $lineage = $this->handleCharacterLineage($data, $character, $isMyo);
+            $lineage = $this->handleCharacterLineage($data, $character, $isGeno);
 
             // Create character image
             $data['is_valid'] = true; // New image of new characters are always valid
-            $image = $this->handleCharacterImage($data, $character, $isMyo);
+            $image = $this->handleCharacterImage($data, $character, $isGeno);
             if (!$image) {
                 throw new \Exception('Error happened while trying to create image.');
             }
@@ -178,16 +178,16 @@ class CharacterManager extends Service
 
             // Add a log for the character
             // This logs all the updates made to the character
-            $this->createLog($user->id, null, $recipientId, $url, $character->id, $isMyo ? 'MYO Slot Created' : 'Character Created', 'Initial upload', 'character');
+            $this->createLog($user->id, null, $recipientId, $url, $character->id, $isGeno ? 'geno Slot Created' : 'Character Created', 'Initial upload', 'character');
 
             // Add a log for the user
             // This logs ownership of the character
-            $this->createLog($user->id, null, $recipientId, $url, $character->id, $isMyo ? 'MYO Slot Created' : 'Character Created', 'Initial upload', 'user');
+            $this->createLog($user->id, null, $recipientId, $url, $character->id, $isGeno ? 'geno Slot Created' : 'Character Created', 'Initial upload', 'user');
 
             // Update the user's FTO status and character count
             if (is_object($recipient)) {
-                if (!$isMyo) {
-                    $recipient->settings->is_fto = 0; // MYO slots don't affect the FTO status - YMMV
+                if (!$isGeno) {
+                    $recipient->settings->is_fto = 0; // geno slots don't affect the FTO status - YMMV
                 }
                 $recipient->settings->save();
             }
@@ -199,10 +199,10 @@ class CharacterManager extends Service
 
             // If the recipient has an account, send them a notification
             if (is_object($recipient) && $user->id != $recipient->id) {
-                Notifications::create($isMyo ? 'MYO_GRANT' : 'CHARACTER_UPLOAD', $recipient, [
+                Notifications::create($isGeno ? 'geno_GRANT' : 'CHARACTER_UPLOAD', $recipient, [
                     'character_url' => $character->url,
                 ] + (
-                    $isMyo ?
+                    $isGeno ?
                     ['name' => $character->name] :
                     ['character_slug' => $character->slug]
                 ));
@@ -321,9 +321,9 @@ class CharacterManager extends Service
      *
      * @param array                                $points
      * @param \App\Models\Character\CharacterImage $characterImage
-     * @param mixed                                $isMyo
+     * @param mixed                                $isGeno
      */
-    public function cropThumbnail($points, $characterImage, $isMyo = false)
+    public function cropThumbnail($points, $characterImage, $isGeno = false)
     {
         $image = Image::make($characterImage->imagePath.'/'.$characterImage->imageFileName);
 
@@ -333,7 +333,7 @@ class CharacterManager extends Service
             $trimColor = true;
         }
 
-        if (Config::get('lorekeeper.settings.watermark_masterlist_thumbnails') == 1 && !$isMyo) {
+        if (Config::get('lorekeeper.settings.watermark_masterlist_thumbnails') == 1 && !$isGeno) {
             // Trim transparent parts of image.
             $image->trim(isset($trimColor) && $trimColor ? 'top-left' : 'transparent');
 
@@ -500,7 +500,7 @@ class CharacterManager extends Service
         DB::beginTransaction();
 
         try {
-            if (!$character->is_myo_slot) {
+            if (!$character->is_geno_slot) {
                 if (!(isset($data['species_id']) && $data['species_id'])) {
                     throw new \Exception('Characters require a species.');
                 }
@@ -804,16 +804,16 @@ class CharacterManager extends Service
             // Save image
             $this->handleImage($data['image'], $image->imageDirectory, $image->imageFileName);
 
-            $isMyo = $image->character->is_myo_slot ? true : false;
+            $isGeno = $image->character->is_geno_slot ? true : false;
             // Save thumbnail
             if (isset($data['use_cropper'])) {
-                $this->cropThumbnail(Arr::only($data, ['x0', 'x1', 'y0', 'y1']), $image, $isMyo);
+                $this->cropThumbnail(Arr::only($data, ['x0', 'x1', 'y0', 'y1']), $image, $isGeno);
             } else {
                 $this->handleImage($data['thumbnail'], $image->thumbnailPath, $image->thumbnailFileName);
             }
 
             // Process and save the image itself
-            if (!$isMyo) {
+            if (!$isGeno) {
                 $this->processImage($image);
             }
 
@@ -1014,7 +1014,7 @@ class CharacterManager extends Service
 
         try {
             $ids = array_reverse(explode(',', $data['sort']));
-            $characters = Character::myo(0)->whereIn('id', $ids)->where('user_id', $user->id)->where('is_visible', 1)->orderByRaw(DB::raw('FIELD(id, '.implode(',', $ids).')'))->get();
+            $characters = Character::geno(0)->whereIn('id', $ids)->where('user_id', $user->id)->where('is_visible', 1)->orderByRaw(DB::raw('FIELD(id, '.implode(',', $ids).')'))->get();
 
             if (count($characters) != count($ids)) {
                 throw new \Exception('Invalid character included in sorting order.');
@@ -1237,7 +1237,7 @@ class CharacterManager extends Service
                 throw new \Exception('Failed to log admin action.');
             }
 
-            if (!$character->is_myo_slot && Character::where('slug', $data['slug'])->where('id', '!=', $character->id)->exists()) {
+            if (!$character->is_geno_slot && Character::where('slug', $data['slug'])->where('id', '!=', $character->id)->exists()) {
                 throw new \Exception('Character code must be unique.');
             }
 
@@ -1250,7 +1250,7 @@ class CharacterManager extends Service
             $characterData['is_giftable'] = isset($data['is_giftable']);
             $characterData['sale_value'] = isset($data['sale_value']) ? $data['sale_value'] : 0;
             $characterData['transferrable_at'] = isset($data['transferrable_at']) ? $data['transferrable_at'] : null;
-            if ($character->is_myo_slot) {
+            if ($character->is_geno_slot) {
                 $characterData['name'] = (isset($data['name']) && $data['name']) ? $data['name'] : null;
             }
 
@@ -1258,7 +1258,7 @@ class CharacterManager extends Service
             $result = [];
             $old = [];
             $new = [];
-            if (!$character->is_myo_slot) {
+            if (!$character->is_geno_slot) {
                 if ($characterData['character_category_id'] != $character->character_category_id) {
                     $result[] = 'character category';
                     $old['character_category'] = $character->category->displayName;
@@ -1442,7 +1442,7 @@ class CharacterManager extends Service
             }
 
             // Update the character's profile
-            if (!$character->is_myo_slot) {
+            if (!$character->is_geno_slot) {
                 $character->name = $data['name'];
             }
             $character->save();
@@ -1468,7 +1468,7 @@ class CharacterManager extends Service
                 }
             }
 
-            if(!$character->is_myo_slot && Config::get('lorekeeper.extensions.character_TH_profile_link')) $character->profile->link = $data['link'];
+            if(!$character->is_geno_slot && Config::get('lorekeeper.extensions.character_TH_profile_link')) $character->profile->link = $data['link'];
             $character->profile->save();
 
             $character->profile->text = $data['text'];
@@ -1535,7 +1535,7 @@ class CharacterManager extends Service
 
             // Check if we need to create a lineage bc this character doesn't have one.
             if(!$character->lineage) {
-                $line = $this->handleCharacterLineage($data, $character, $character->is_myo_slot);
+                $line = $this->handleCharacterLineage($data, $character, $character->is_geno_slot);
                 // tells us we don't need to calculate ancestors as handleCharacterLineage already does
                 $skipFlag = true;
             }
@@ -2090,7 +2090,7 @@ class CharacterManager extends Service
         }
 
         if (is_object($recipient)) {
-            if (!$character->is_myo_slot) {
+            if (!$character->is_geno_slot) {
                 $recipient->settings->is_fto = 0;
             }
             $recipient->settings->save();
@@ -2130,7 +2130,7 @@ class CharacterManager extends Service
             ]);
         }
 
-        if (Config::get('lorekeeper.settings.reset_character_profile_on_transfer') && !$character->is_myo_slot) {
+        if (Config::get('lorekeeper.settings.reset_character_profile_on_transfer') && !$character->is_geno_slot) {
             // Reset name and profile
             $character->update(['name' => null]);
 
@@ -2148,7 +2148,7 @@ class CharacterManager extends Service
             $recipient && is_object($recipient) ? $recipient->id : null,
             $recipient && is_object($recipient) ? $recipient->url : ($recipient ?: null),
             $character->id,
-            $logType ? $logType : ($character->is_myo_slot ? 'MYO Slot Transferred' : 'Character Transferred'),
+            $logType ? $logType : ($character->is_geno_slot ? 'geno Slot Transferred' : 'Character Transferred'),
             $data,
             'user'
         );
@@ -2158,14 +2158,14 @@ class CharacterManager extends Service
      * Handles character data.
      *
      * @param array $data
-     * @param bool  $isMyo
+     * @param bool  $isGeno
      *
      * @return \App\Models\Character\Character|bool
      */
-    private function handleCharacter($data, $isMyo = false)
+    private function handleCharacter($data, $isGeno = false)
     {
         try {
-            if ($isMyo) {
+            if ($isGeno) {
                 $data['character_category_id'] = null;
                 $data['number'] = null;
                 $data['slug'] = null;
@@ -2180,7 +2180,7 @@ class CharacterManager extends Service
                 'sale_value', 'transferrable_at', 'is_visible',
             ]);
 
-            $characterData['name'] = ($isMyo && isset($data['name'])) ? $data['name'] : null;
+            $characterData['name'] = ($isGeno && isset($data['name'])) ? $data['name'] : null;
             $characterData['owner_url'] = isset($characterData['user_id']) ? null : $data['owner_url'];
             $characterData['is_sellable'] = isset($data['is_sellable']);
             $characterData['is_tradeable'] = isset($data['is_tradeable']);
@@ -2191,8 +2191,8 @@ class CharacterManager extends Service
             $characterData['is_gift_writing_allowed'] = 0;
             $characterData['is_trading'] = 0;
             $characterData['parsed_description'] = parse($data['description']);
-            if ($isMyo) {
-                $characterData['is_myo_slot'] = 1;
+            if ($isGeno) {
+                $characterData['is_geno_slot'] = 1;
             }
 
             $character = Character::create($characterData);
@@ -2212,24 +2212,24 @@ class CharacterManager extends Service
      * Handles character image data.
      *
      * @param array $data
-     * @param bool  $isMyo
+     * @param bool  $isGeno
      * @param mixed $character
      *
      * @return \App\Models\Character\Character           $character
      * @return \App\Models\Character\CharacterImage|bool
      */
-    private function handleCharacterImage($data, $character, $isMyo = false)
+    private function handleCharacterImage($data, $character, $isGeno = false)
     {
         try {
-            if ($isMyo) {
+            if ($isGeno) {
                 $data['species_id'] = (isset($data['species_id']) && $data['species_id']) ? $data['species_id'] : null;
                 $data['subtype_id'] = isset($data['subtype_id']) && $data['subtype_id'] ? $data['subtype_id'] : null;
                 $data['rarity_id'] = (isset($data['rarity_id']) && $data['rarity_id']) ? $data['rarity_id'] : null;
 
-                // Use default images for MYO slots without an image provided
+                // Use default images for geno slots without an image provided
                 if (!isset($data['image'])) {
-                    $data['image'] = asset('images/myo.png');
-                    $data['thumbnail'] = asset('images/myo-th.png');
+                    $data['image'] = asset('images/geno.png');
+                    $data['thumbnail'] = asset('images/geno-th.png');
                     $data['extension'] = 'png';
                     $data['default_image'] = true;
                     unset($data['use_cropper']);
@@ -2314,13 +2314,13 @@ class CharacterManager extends Service
 
             // Save thumbnail first before processing full image
             if (isset($data['use_cropper'])) {
-                $this->cropThumbnail(Arr::only($data, ['x0', 'x1', 'y0', 'y1']), $image, $isMyo);
+                $this->cropThumbnail(Arr::only($data, ['x0', 'x1', 'y0', 'y1']), $image, $isGeno);
             } else {
                 $this->handleImage($data['thumbnail'], $image->imageDirectory, $image->thumbnailFileName, null, isset($data['default_image']));
             }
 
             // Process and save the image itself
-            if (!$isMyo) {
+            if (!$isGeno) {
                 $this->processImage($image);
             }
 

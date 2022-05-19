@@ -23,7 +23,7 @@
             <div class="text-right mb-1">
                 <div class="badge badge-primary">Image #{{ $image->id }}</div>
             </div>
-            @if(!$image->character->is_myo_slot && !$image->is_valid)
+            @if(!$image->character->is_geno_slot && !$image->is_valid)
                 <div class="alert alert-danger">
                     This version of this character is outdated, and only noted here for recordkeeping purposes. Do not use as an official reference.
                 </div>
