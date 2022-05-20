@@ -898,6 +898,7 @@ class Character extends Model
                     'character_url'  => $this->url,
                     'character_name' => $this->fullName,
                 ]);
-        }
+            }
+        } 
     }
 }
