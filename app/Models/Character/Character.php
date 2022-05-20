@@ -842,6 +842,19 @@ class Character extends Model
     }
 
     /**
+     * Finds the lineage blacklist level of this character.
+     * 0 is no restriction at all
+     * 1 is no ancestors but no children
+     * 2 is no lineage at all
+     *
+     * @return int
+     */
+    public function getLineageBlacklistLevel($maxLevel = 2)
+    {
+        return CharacterLineageBlacklist::getBlacklistLevel($this, $maxLevel);
+    }
+
+    /**
      * Notifies character's bookmarkers in case of a change.
      *
      * @param mixed $type
@@ -886,18 +899,5 @@ class Character extends Model
                     'character_name' => $this->fullName,
                 ]);
         }
-    }
-
-    /**
-     * Finds the lineage blacklist level of this character.
-     * 0 is no restriction at all
-     * 1 is no ancestors but no children
-     * 2 is no lineage at all
-     *
-     * @return int
-     */
-    public function getLineageBlacklistLevel($maxLevel = 2)
-    {
-        return CharacterLineageBlacklist::getBlacklistLevel($this, $maxLevel);
     }
 }
