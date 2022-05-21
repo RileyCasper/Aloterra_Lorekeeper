@@ -87,19 +87,31 @@ return [
         'primary_alias' => 0
     ],
 
-    /**********************************************************************************************
-
-        GENERAL
-
-    **********************************************************************************************/
-
     'toyhouse' => [
         'full_name' => 'Toyhou.se',
         'display_name' => 'TH',
         'regex' => '/toyhou\.se\/([A-Za-z0-9_-]+)/',
         'link' => 'toyhou.se',
         'icon' => 'fas fa-home'
+        'auth' => 1,
+        'primary_alias' => 1
     ],
+
+    'discord' => [
+        'full_name' => 'Discord',
+        'display_name' => 'Discord',
+        'regex' => '/discord\.com\/([A-Za-z0-9_-]+)/',
+        'link' => 'discord',
+        'icon' => 'fas fa-discord'
+        'auth' => 1,
+        'primary_alias' => 1
+    ],
+
+    /**********************************************************************************************
+
+        GENERAL
+
+    **********************************************************************************************/
 
     'artstation' => [
         'full_name' => 'Artstation',

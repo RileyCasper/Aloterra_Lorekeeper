@@ -20,12 +20,12 @@ return [
     | Version
     |--------------------------------------------------------------------------
     |
-    | This is the current version of Lorekeeper that your site is on. 
+    | This is the current version of Lorekeeper that your site is on.
     | Do not change this value!
     |
     */
     'version' => '2.0.0',
-    
+
     /*
     |--------------------------------------------------------------------------
     | Site Name
@@ -36,7 +36,7 @@ return [
     | site wherever the name needs to be displayed.
     |
     */
-    'site_name' => 'Lorekeeper',
+    'site_name' => 'Aloterra',
 
     /*
     |--------------------------------------------------------------------------
@@ -48,7 +48,7 @@ return [
     | It is not, however, displayed on the site itself. This should be kept short and snappy!
     |
     */
-    'site_desc' => 'A Lorekeeper ARPG',
+    'site_desc' => 'Home of the Alogomimus breed.',
 
     /*
     |--------------------------------------------------------------------------
@@ -107,7 +107,7 @@ return [
     |
     */
     'character_codes' => '{category}-{number}',
-    'character_number_digits' => 3,
+    'character_number_digits' => 4,
     'character_pull_number' => 'all',
 
     'reset_character_status_on_transfer' => 0,

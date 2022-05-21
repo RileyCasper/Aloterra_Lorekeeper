@@ -1,6 +1,6 @@
 <?php
 return [
-    
+
     // FORMAT EXAMPLE.
     //
     // 'extension_tracker' => [
@@ -11,6 +11,6 @@ return [
     //     ]),
     //     'version' => '1.0.0',
     // ],
-    
+
 
 ];
