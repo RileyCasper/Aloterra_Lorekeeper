@@ -14,7 +14,6 @@ use App\Models\Submission\SubmissionCharacter;
 use App\Models\User\User;
 use App\Models\User\UserItem;
 use App\Models\Recipe\Recipe;
-use App\Models\Prompt\Prompt;
 use App\Models\Pet\Pet;
 use App\Models\Claymore\Gear;
 use App\Models\Claymore\Weapon;

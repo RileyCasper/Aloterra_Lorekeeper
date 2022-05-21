@@ -23,6 +23,7 @@ use App\Models\User\UserCurrency;
 use Auth;
 use Illuminate\Http\Request;
 use Route;
+use Settings;
 
 use App\Models\User\UserPet;
 use App\Models\Pet\Pet;

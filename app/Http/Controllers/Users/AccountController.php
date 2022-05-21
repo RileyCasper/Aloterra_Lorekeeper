@@ -12,9 +12,9 @@ use App\Models\Theme;
 use App\Services\LinkService;
 use App\Services\UserService;
 use Auth;
+use Settings;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Notification;
 use App\Models\WorldExpansion\Location;
 use App\Models\WorldExpansion\Faction;
 
