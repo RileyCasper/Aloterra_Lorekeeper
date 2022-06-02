@@ -87,16 +87,6 @@ return [
         'primary_alias' => 0
     ],
 
-    'toyhouse' => [
-        'full_name' => 'Toyhou.se',
-        'display_name' => 'TH',
-        'regex' => '/toyhou\.se\/([A-Za-z0-9_-]+)/',
-        'link' => 'toyhou.se',
-        'icon' => 'fas fa-home'
-        'auth' => 0,
-        'primary_alias' => 1
-    ],
-
     'discord' => [
         'full_name' => 'Discord',
         'display_name' => 'Discord',
@@ -125,5 +115,13 @@ return [
         'display_name' => 'picarto',
         'regex' => '/picarto\.tv\/([A-Za-z0-9_-]+)/',
         'link' => 'picarto.tv'
+    ],
+
+    'toyhouse' => [
+        'full_name' => 'Toyhou.se',
+        'display_name' => 'TH',
+        'regex' => '/toyhou\.se\/([A-Za-z0-9_-]+)/',
+        'link' => 'toyhou.se',
+        'icon' => 'fas fa-home'
     ],
 ];
