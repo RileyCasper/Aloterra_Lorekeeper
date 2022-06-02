@@ -87,16 +87,6 @@ return [
         'primary_alias' => 0
     ],
 
-    'discord' => [
-        'full_name' => 'Discord',
-        'display_name' => 'Discord',
-        'regex' => '/discord\.com\/([A-Za-z0-9_-]+)/',
-        'link' => 'discord',
-        'icon' => 'fas fa-discord'
-        'auth' => 1,
-        'primary_alias' => 1
-    ],
-
     /**********************************************************************************************
 
         GENERAL
@@ -123,5 +113,13 @@ return [
         'regex' => '/toyhou\.se\/([A-Za-z0-9_-]+)/',
         'link' => 'toyhou.se',
         'icon' => 'fas fa-home'
+    ],
+
+    'discord' => [
+        'full_name' => 'Discord',
+        'display_name' => 'Discord',
+        'regex' => '/discord\.com\/([A-Za-z0-9_-]+)/',
+        'link' => 'discord',
+        'icon' => 'fas fa-discord'
     ],
 ];
